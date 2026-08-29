@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#241d17;}
+  a{color:#f0aa48;} a:hover{color:#ffd6a0;}
+  @keyframes heat{0%,100%{opacity:.45;} 50%{opacity:1;}}
+  @keyframes emberrise{0%{opacity:0;transform:translateY(4px) scale(.6);} 30%{opacity:.9;} 100%{opacity:0;transform:translateY(-16px) scale(1);}}
+  @keyframes sweep{0%{transform:translateX(-100%);} 100%{transform:translateX(220%);}}
+  @keyframes pulsering{0%{transform:scale(.75);opacity:.85;} 100%{transform:scale(1.5);opacity:0;}}
+</style>
+</helmet>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden;" aria-hidden="true"><defs>
+  <symbol id="g-hero" viewBox="0 0 24 24"><circle cx="12" cy="7.3" r="3.6" fill="currentColor" opacity=".2" stroke="none"></circle><path d="M4.6,20.2 C4.6,15.4 8,12.7 12,12.7 C16,12.7 19.4,15.4 19.4,20.2 Z" fill="currentColor" opacity=".2" stroke="none"></path><circle cx="12" cy="7.3" r="3.6"></circle><path d="M4.6,20.2 C4.6,15.4 8,12.7 12,12.7 C16,12.7 19.4,15.4 19.4,20.2 Z"></path></symbol>
+  <symbol id="g-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="12" cy="12" r="8.2"></circle><path d="M12,7.6 V16.4 M9.6,9.6 C9.6,8.4 14.4,8.4 14.4,10.6 C14.4,12.6 9.6,11.6 9.6,13.8 C9.6,15.8 14.4,15.6 14.4,14.4"></path></symbol>
+  <symbol id="g-house" viewBox="0 0 24 24"><path d="M6.4,10.6 L12,5.8 L17.6,10.6 V20 H6.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.2,11.6 L12,4 L20.8,11.6"></path><path d="M6.4,10.2 V20 H17.6 V10.2"></path><path d="M9.9,20 V14.6 H14.1 V20"></path><path d="M16.2,8.6 V4.8 H18.4 V10.4"></path><circle cx="12" cy="8.4" r="1.1" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-map" viewBox="0 0 24 24"><path d="M3.4,6.4 L9.4,4.4 L14.6,6.6 L20.6,4.4 V17.6 L14.6,19.6 L9.4,17.4 L3.4,19.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.4,6.4 L9.4,4.4 L14.6,6.6 L20.6,4.4 V17.6 L14.6,19.6 L9.4,17.4 L3.4,19.6 Z"></path><path d="M9.4,4.4 V17.4 M14.6,6.6 V19.6"></path></symbol>
+  <symbol id="g-flame" viewBox="0 0 24 24"><path d="M12,2.8 C15.8,8.4 17.8,11.4 17.8,14.6 A5.8,5.8 0 0 1 6.2,14.6 C6.2,11.4 8.2,8.4 12,2.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,2.8 C15.8,8.4 17.8,11.4 17.8,14.6 A5.8,5.8 0 0 1 6.2,14.6 C6.2,11.4 8.2,8.4 12,2.8 Z"></path><path d="M12,11.4 C13.7,13.6 14.5,14.6 14.5,15.8 A2.5,2.5 0 0 1 9.5,15.8 C9.5,14.6 10.3,13.6 12,11.4 Z" fill="currentColor" stroke="none"></path></symbol>
+  <symbol id="g-stall" viewBox="0 0 24 24"><path d="M4.2,9 H19.8 V20 H4.2 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M2.6,9 L5,3.8 H19 L21.4,9 Z"></path><path d="M2.6,9 q2.4,2.6 4.7,0 q2.4,2.6 4.7,0 q2.4,2.6 4.7,0 q2.4,2.6 4.7,0" fill="currentColor" stroke="none" opacity=".55"></path><path d="M4.2,9.4 V20 H19.8 V9.4"></path><path d="M8.8,20 V13.4 H15.2 V20"></path></symbol>
+  <symbol id="g-scroll" viewBox="0 0 24 24"><path d="M6.4,3.6 H17.6 V20.4 H6.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M6.4,3.6 H17.6 V20.4 H6.4 Z"></path><path d="M9.2,7.8 H14.8 M9.2,11.4 H14.8 M9.2,15 H13"></path><circle cx="17.6" cy="3.6" r="1.5" fill="currentColor" stroke="none" opacity=".5"></circle></symbol>
+  <symbol id="g-bag" viewBox="0 0 24 24"><path d="M5,8.2 H19 L20.4,20.2 H3.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5,8.2 H19 L20.4,20.2 H3.6 Z"></path><path d="M8.8,8.2 C8.8,5.4 10.2,3.8 12,3.8 C13.8,3.8 15.2,5.4 15.2,8.2"></path><path d="M3.9,12.4 H20.1"></path></symbol>
+  <symbol id="g-axe" viewBox="0 0 24 24"><path d="M12.4,3.6 L20.8,7.8 L17,14.4 L10.2,10.2 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M7,21 L15.2,6.6" stroke-width="2.4"></path><path d="M12.4,3.6 L20.8,7.8 L17,14.4 L10.2,10.2 Z"></path><path d="M14.4,6.2 L17.6,11.6" opacity=".6"></path></symbol>
+  <symbol id="g-pick" viewBox="0 0 24 24"><path d="M12,21 V9.6" stroke-width="2.4"></path><path d="M3.4,8.4 C7.4,3.8 16.6,3.8 20.6,8.4 C16.8,7 15,7.6 12,9.6 C9,7.6 7.2,7 3.4,8.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.4,8.4 C7.4,3.8 16.6,3.8 20.6,8.4 C16.8,7 15,7.6 12,9.6 C9,7.6 7.2,7 3.4,8.4 Z"></path></symbol>
+  <symbol id="g-rod" viewBox="0 0 24 24"><path d="M3.6,20.4 L17.8,4.6" stroke-width="2.2"></path><path d="M17.8,4.6 Q20.4,7.6 19.2,10.4"></path><path d="M19,10.6 V12.4"></path><circle cx="19" cy="14.6" r="2.4" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="19" cy="14.6" r="2.4"></circle></symbol>
+  <symbol id="g-fish" viewBox="0 0 24 24"><path d="M15.6,12 C15.6,15.4 12.8,18.2 9.2,18.2 C5.6,18.2 2.8,15.4 2.8,12 C2.8,8.6 5.6,5.8 9.2,5.8 C12.8,5.8 15.6,8.6 15.6,12 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M15.6,12 C15.6,15.4 12.8,18.2 9.2,18.2 C5.6,18.2 2.8,15.4 2.8,12 C2.8,8.6 5.6,5.8 9.2,5.8 C12.8,5.8 15.6,8.6 15.6,12 Z"></path><path d="M15.6,12 L21.4,7.6 V16.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M15.6,12 L21.4,7.6 V16.4 Z"></path><path d="M8.6,6.2 Q10,9 8.6,11.2" opacity=".55"></path><circle cx="6.4" cy="10.6" r="1.1" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-log" viewBox="0 0 24 24"><path d="M7.6,4.6 H17 A3.4,7.4 0 0 1 17,19.4 H7.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M7.6,4.6 H17 A3.4,7.4 0 0 1 17,19.4 H7.6 A3.4,7.4 0 0 0 7.6,4.6 Z"></path><ellipse cx="7.6" cy="12" rx="3.4" ry="7.4"></ellipse><ellipse cx="7.6" cy="12" rx="1.5" ry="3.4" opacity=".65"></ellipse></symbol>
+  <symbol id="g-ore" viewBox="0 0 24 24"><path d="M12,3 L20.4,9.8 L16.6,20.6 H7.4 L3.6,9.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,3 L20.4,9.8 L16.6,20.6 H7.4 L3.6,9.8 Z"></path><path d="M3.6,9.8 H20.4 M12,3 L8.6,9.8 L12,20.6 L15.4,9.8 Z"></path><circle cx="12" cy="7" r="1" fill="currentColor" stroke="none" opacity=".7"></circle></symbol>
+  <symbol id="g-bar" viewBox="0 0 24 24"><path d="M2.6,16.6 L6.8,8.6 H21.4 L17.2,16.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M2.6,16.6 L6.8,8.6 H21.4 L17.2,16.6 Z"></path><path d="M6.8,8.6 L2.6,16.6 M17.2,16.6 L21.4,8.6" opacity=".6"></path><path d="M9.4,12.6 H16" opacity=".6"></path></symbol>
+  <symbol id="g-meal" viewBox="0 0 24 24"><path d="M3.4,12.4 A8.6,8.6 0 0 0 20.6,12.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.4,12.4 A8.6,8.6 0 0 0 20.6,12.4"></path><path d="M1.8,12.4 H22.2" stroke-width="2"></path><path d="M7.2,8.6 C8.8,6 15.2,6 16.8,8.6"></path><circle cx="12" cy="5.4" r="1.2" fill="currentColor" stroke="none" opacity=".75"></circle></symbol>
+  <symbol id="g-hammer" viewBox="0 0 24 24"><path d="M7.6,4 L20.4,8.8 L18.6,13.6 L5.8,8.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M10.6,21.2 L15.4,9.4" stroke-width="2.4"></path><path d="M7.6,4 L20.4,8.8 L18.6,13.6 L5.8,8.8 Z"></path></symbol>
+  <symbol id="g-anvil" viewBox="0 0 24 24"><path d="M3.4,8.6 H20.6 L17.2,14 H6.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.4,8.6 H20.6 L17.2,14 H6.8 Z"></path><path d="M10.2,14 V17 H13.8 V14"></path><path d="M5.6,20.4 H18.4 L16.6,17 H7.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5.6,20.4 H18.4 L16.6,17 H7.4 Z"></path></symbol>
+  <symbol id="g-sword" viewBox="0 0 24 24"><path d="M12,2.6 L14.2,6.4 V14.4 H9.8 V6.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,2.6 L14.2,6.4 V14.4 H9.8 V6.4 Z"></path><path d="M7.8,14.8 H16.2" stroke-width="2.2"></path><path d="M12,15.2 V20.4"></path><path d="M9.8,21 H14.2" stroke-width="2"></path></symbol>
+  <symbol id="g-shield" viewBox="0 0 24 24"><path d="M12,3 L20,5.8 V12.6 C20,17.6 12,21.2 12,21.2 C12,21.2 4,17.6 4,12.6 V5.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,3 L20,5.8 V12.6 C20,17.6 12,21.2 12,21.2 C12,21.2 4,17.6 4,12.6 V5.8 Z"></path><path d="M12,7.4 L15.4,8.8 V12.4 C15.4,14.8 12,16.6 12,16.6 C12,16.6 8.6,14.8 8.6,12.4 V8.8 Z" fill="currentColor" stroke="none" opacity=".45"></path></symbol>
+  <symbol id="g-lock" viewBox="0 0 24 24"><path d="M5.4,10.4 H18.6 V20.6 H5.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5.4,10.4 H18.6 V20.6 H5.4 Z"></path><path d="M8.4,10.4 V7.4 A3.6,3.6 0 0 1 15.6,7.4 V10.4"></path><circle cx="12" cy="15.4" r="1.5" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-tree" viewBox="0 0 24 24"><path d="M12,2.6 L17.4,10 H6.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,7 L19.4,16.6 H4.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,2.6 L17.4,10 H6.6 Z"></path><path d="M12,7 L19.4,16.6 H4.6 Z"></path><path d="M12,16.6 V21.4" stroke-width="2.4"></path></symbol>
+  <symbol id="g-rock" viewBox="0 0 24 24"><path d="M2.6,19.4 L7.8,8.6 L14,12.8 L11,19.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M11,19.4 L15.2,6.6 L21.4,12 L20.6,19.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M2.6,19.4 L7.8,8.6 L14,12.8 L11,19.4 Z"></path><path d="M11,19.4 L15.2,6.6 L21.4,12 L20.6,19.4 Z"></path></symbol>
+  <symbol id="g-wave" viewBox="0 0 24 24"><path d="M1.8,8.4 q3.1,-3.2 6.2,0 t6.2,0 t6.2,0" stroke-width="2"></path><path d="M1.8,13 q3.1,-3.2 6.2,0 t6.2,0 t6.2,0" stroke-width="2" opacity=".7"></path><path d="M1.8,17.6 q3.1,-3.2 6.2,0 t6.2,0 t6.2,0" stroke-width="2" opacity=".45"></path></symbol>
+  <symbol id="g-skull" viewBox="0 0 24 24"><path d="M6,11.4 A6,6 0 0 1 18,11.4 V15.4 L15,17.4 V20.4 H9 V17.4 L6,15.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M6,11.4 A6,6 0 0 1 18,11.4 V15.4 L15,17.4 V20.4 H9 V17.4 L6,15.4 Z"></path><circle cx="9.5" cy="12.2" r="1.5" fill="currentColor" stroke="none"></circle><circle cx="14.5" cy="12.2" r="1.5" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-beast" viewBox="0 0 24 24"><path d="M12,20.4 C7.4,20.4 4.2,16.8 4.2,12.6 C4.2,9.4 7.4,7.2 12,7.2 C16.6,7.2 19.8,9.4 19.8,12.6 C19.8,16.8 16.6,20.4 12,20.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M4.8,9.4 L6.8,3.6 L10.8,8"></path><path d="M19.2,9.4 L17.2,3.6 L13.2,8"></path><path d="M12,20.4 C7.4,20.4 4.2,16.8 4.2,12.6 C4.2,9.4 7.4,7.2 12,7.2 C16.6,7.2 19.8,9.4 19.8,12.6 C19.8,16.8 16.6,20.4 12,20.4 Z"></path><circle cx="9.4" cy="13" r="1.2" fill="currentColor" stroke="none"></circle><circle cx="14.6" cy="13" r="1.2" fill="currentColor" stroke="none"></circle><path d="M10.2,17 q1.8,1.4 3.6,0"></path></symbol>
+  <symbol id="g-ghost" viewBox="0 0 24 24"><path d="M5,20.4 V11 A7,7 0 0 1 19,11 V20.4 L16.5,18.2 L14,20.4 L12,18.2 L10,20.4 L7.5,18.2 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5,20.4 V11 A7,7 0 0 1 19,11 V20.4 L16.5,18.2 L14,20.4 L12,18.2 L10,20.4 L7.5,18.2 Z"></path><circle cx="9.5" cy="11.4" r="1.4" fill="currentColor" stroke="none"></circle><circle cx="14.5" cy="11.4" r="1.4" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-construct" viewBox="0 0 24 24"><path d="M4,4 H20 V20 H4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M4,4 H20 V20 H4 Z"></path><path d="M8.4,8.4 H15.6 V15.6 H8.4 Z"></path><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-dragon" viewBox="0 0 24 24"><path d="M12,3.6 L18.4,13.2 H5.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5.6,13.2 L1.6,8.6 L3.8,17.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M18.4,13.2 L22.4,8.6 L20.2,17.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,3.6 L18.4,13.2 H5.6 Z"></path><path d="M5.6,13.2 L1.6,8.6 L3.8,17.4 Z"></path><path d="M18.4,13.2 L22.4,8.6 L20.2,17.4 Z"></path><path d="M12,13.2 V20.4"></path></symbol>
+  <symbol id="g-bandit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="12" cy="12" r="8.2"></circle><path d="M4.4,10.2 H19.6 V13.8 H4.4 Z" fill="currentColor" stroke="none"></path><path d="M9,17 q3,1.6 6,0"></path></symbol>
+  <symbol id="g-rat" viewBox="0 0 24 24"><circle cx="13" cy="13.6" r="6" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="8" cy="7.8" r="2.8" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="13" cy="13.6" r="6"></circle><circle cx="8" cy="7.8" r="2.8"></circle><path d="M19.2,15.6 q4.2,1 2.2,5.2"></path><circle cx="10.4" cy="11.6" r="1" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-check" viewBox="0 0 24 24"><path d="M4.6,12.8 L9.8,18.2 L19.4,6.6" stroke-width="2.6"></path></symbol>
+</defs></svg>
+
+<div style="background:#241d17;padding:26px;font-family:'Barlow',sans-serif;">
+  <div style="max-width:1300px;margin:0 0 24px;">
+    <div style="font-family:'Cinzel',serif;font-weight:900;font-size:11px;letter-spacing:.3em;color:#eda23c;">THORNWAKE &mdash; DIRECTION B, WARMED</div>
+    <div style="font-family:'Cinzel',serif;font-weight:700;font-size:28px;color:#f0ebe0;margin-top:6px;">Hearthstead &mdash; every screen</div>
+    <div style="font-size:15px;line-height:1.55;color:#b6a583;margin-top:8px;max-width:720px;text-wrap:pretty;">Same bones, warmer stock: oiled timber and loam instead of cold iron, honey amber instead of ember orange, sage where the steel blue was. All emoji replaced by a single flat glyph set (32 symbols, one stroke weight). The character sheet opens by tapping your name in the HUD, so the six-item nav is untouched.</div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start;">
+
+    <!-- ================= TOWN ================= -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#a69573;margin-bottom:9px;">01 &mdash; TOWN</div>
+      <div style="width:400px;height:830px;display:flex;flex-direction:column;overflow:hidden;background:#332920;border:1px solid #5e4b2d;box-shadow:0 20px 50px rgba(0,0,0,.7);">
+        <div style="position:relative;background:linear-gradient(180deg,#4c3d2a,#372c20 60%,#2e251b);border-bottom:1px solid #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 10px rgba(0,0,0,.7);flex-shrink:0;">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#eda23c,transparent);opacity:.5;"></div>
+          <div style="padding:11px 13px 10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;cursor:pointer;">
+                <div style="width:36px;height:36px;flex-shrink:0;background:linear-gradient(145deg,#4f402d,#3d3123);border:1px solid #7a6339;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 12px rgba(237,162,60,.14);clip-path:polygon(22% 0,78% 0,100% 22%,100% 78%,78% 100%,22% 100%,0 78%,0 22%);display:flex;align-items:center;justify-content:center;color:#ffc78f;">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hero"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15.5px;letter-spacing:.03em;color:#f0ebe0;line-height:1.1;text-shadow:0 0 14px rgba(255,140,60,.22);">Adventurer</div>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#a69573" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9,5 L17,12 L9,19"></path></svg>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                    <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;color:#2e251b;background:#cbb28a;padding:1px 5px;">CB 12</div>
+                    <div style="font-size:10.5px;letter-spacing:.06em;color:#a69573;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">The Hollow of Thornwake</div>
+                  </div>
+                </div>
+              </div>
+              <div style="flex-shrink:0;text-align:right;padding-left:10px;border-left:1px solid #60492c;display:flex;align-items:center;gap:6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffc46b" stroke-width="1.8"><use href="#g-coin"></use></svg>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:#a69573;text-align:left;">GOLD</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:#ffc46b;line-height:1.15;text-shadow:0 0 10px rgba(255,170,60,.3);">1,284</div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:11px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">HP</div>
+              <div style="flex:1;position:relative;height:15px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background:linear-gradient(180deg,#ff9b6b,#d47340 40%,#94512c);box-shadow:0 0 12px rgba(212,115,64,.55);"></div>
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background-image:repeating-linear-gradient(115deg,rgba(255,220,180,.16) 0 3px,transparent 3px 8px);"></div>
+                <div style="position:absolute;top:1px;left:1px;height:3px;width:64%;background:linear-gradient(180deg,rgba(255,225,200,.5),transparent);"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;color:#fff;letter-spacing:.06em;text-shadow:0 1px 2px rgba(0,0,0,.9);">43 / 68</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">XP</div>
+              <div style="flex:1;position:relative;height:6px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:38%;background:linear-gradient(180deg,#ffd28a,#e2952c);box-shadow:0 0 9px rgba(255,180,70,.5);"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0 6px 4px;">
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+          </div>
+        </div>
+        <div style="flex:1;overflow:hidden;background:radial-gradient(ellipse 130% 45% at 50% 0%,#3d3123,#332920 70%),#332920;padding:14px 13px;">
+
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;">
+            <div style="width:6px;height:6px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">THE HOLLOW</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#72593c,transparent);"></div>
+          </div>
+
+          <div style="position:relative;background:linear-gradient(160deg,#453828,#332a1f);border:1px solid #684f30;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 6px rgba(0,0,0,.6);padding:12px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#eda23c;box-shadow:0 0 10px rgba(237,162,60,.6);"></div>
+            <div style="font-size:14px;line-height:1.6;color:#c6b797;text-wrap:pretty;">A moss-worn waystation at the edge of the deep woods. The forge fire never quite goes out. Rest here and your wounds close before you leave.</div>
+            <button type="button" style="width:100%;margin-top:11px;border:1px solid #4d7a33;background:linear-gradient(180deg,#7cad50,#4a7229);color:#f2f8ea;font-weight:700;font-size:13.5px;letter-spacing:.11em;text-transform:uppercase;padding:12px;box-shadow:inset 0 1px 0 rgba(220,255,190,.3),0 0 16px rgba(109,156,77,.22);cursor:pointer;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">Rest &amp; Heal</button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:9px;margin:16px 0 11px;">
+            <div style="width:6px;height:6px;background:#cbb28a;transform:rotate(45deg);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">YOUR SKILLS</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#72593c,transparent);"></div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px;">
+
+            <div style="position:relative;background:linear-gradient(160deg,#4a382b,#33261e);border:1px solid #644732;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 6px rgba(0,0,0,.6);padding:10px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="position:absolute;left:0;top:10px;bottom:10px;width:2px;background:#c86a3a;box-shadow:0 0 9px rgba(200,106,58,.6);"></div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="position:relative;width:50px;height:50px;flex-shrink:0;">
+                  <svg width="50" height="50" viewBox="0 0 50 50" style="transform:rotate(-90deg);display:block;">
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#5c4a30" stroke-width="5.5"></circle>
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#d4823f" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="131.9" stroke-dashoffset="82"></circle>
+                  </svg>
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+                    <div style="width:28px;height:28px;background:linear-gradient(150deg,#563f37,#3a2b26);border:1px solid #7a533e;display:flex;align-items:center;justify-content:center;color:#eeb98e;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-sword"></use></svg>
+                    </div>
+                  </div>
+                  <div style="position:absolute;bottom:-3px;right:-4px;background:linear-gradient(180deg,#d4823f,#8a5822);color:#1a0b07;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;padding:0 5px;border:1px solid #332920;clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px);">12</div>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Combat</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#b6a583;margin-top:2px;">3,120 / 5,240 xp</div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11.5px;color:#d4823f;">38%</div>
+              </div>
+            </div>
+
+            <div style="position:relative;background:linear-gradient(160deg,#453828,#332a1f);border:1px solid #684f30;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 6px rgba(0,0,0,.6);padding:10px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="position:absolute;left:0;top:10px;bottom:10px;width:2px;background:#8fbb5a;box-shadow:0 0 9px rgba(127,176,85,.5);"></div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="position:relative;width:50px;height:50px;flex-shrink:0;">
+                  <svg width="50" height="50" viewBox="0 0 50 50" style="transform:rotate(-90deg);display:block;">
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#5c4a30" stroke-width="5.5"></circle>
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#8fbb5a" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="131.9" stroke-dashoffset="46"></circle>
+                  </svg>
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+                    <div style="width:28px;height:28px;background:linear-gradient(150deg,#3b452c,#313524);border:1px solid #5d6b41;display:flex;align-items:center;justify-content:center;color:#bcd98f;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-axe"></use></svg>
+                    </div>
+                  </div>
+                  <div style="position:absolute;bottom:-3px;right:-4px;background:linear-gradient(180deg,#8dbf5e,#5b7c33);color:#0f1a0a;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;padding:0 5px;border:1px solid #332920;clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px);">31</div>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Woodcutting</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#b6a583;margin-top:2px;">1,240 / 2,180 xp</div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11.5px;color:#8dbf5e;">65%</div>
+              </div>
+            </div>
+
+            <div style="position:relative;background:linear-gradient(160deg,#3e3c28,#332c1f);border:1px solid #615833;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 6px rgba(0,0,0,.6);padding:10px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="position:absolute;left:0;top:10px;bottom:10px;width:2px;background:#d0a03c;box-shadow:0 0 9px rgba(208,160,60,.5);"></div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="position:relative;width:50px;height:50px;flex-shrink:0;">
+                  <svg width="50" height="50" viewBox="0 0 50 50" style="transform:rotate(-90deg);display:block;">
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#5c4a30" stroke-width="5.5"></circle>
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#d0a03c" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="131.9" stroke-dashoffset="58"></circle>
+                  </svg>
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+                    <div style="width:28px;height:28px;background:linear-gradient(150deg,#50472c,#372e1c);border:1px solid #7a652f;display:flex;align-items:center;justify-content:center;color:#e8cd8a;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-pick"></use></svg>
+                    </div>
+                  </div>
+                  <div style="position:absolute;bottom:-3px;right:-4px;background:linear-gradient(180deg,#e8c46b,#b58a28);color:#1a1305;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;padding:0 5px;border:1px solid #332920;clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px);">28</div>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Mining</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#b6a583;margin-top:2px;">920 / 1,860 xp</div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11.5px;color:#e8c46b;">56%</div>
+              </div>
+            </div>
+
+            <div style="position:relative;background:linear-gradient(160deg,#3b3d2c,#302c20);border:1px solid #5d5433;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 6px rgba(0,0,0,.6);padding:10px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="position:absolute;left:0;top:10px;bottom:10px;width:2px;background:#63a396;box-shadow:0 0 9px rgba(111,168,196,.5);"></div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="position:relative;width:50px;height:50px;flex-shrink:0;">
+                  <svg width="50" height="50" viewBox="0 0 50 50" style="transform:rotate(-90deg);display:block;">
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#5c4a30" stroke-width="5.5"></circle>
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#63a396" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="131.9" stroke-dashoffset="92"></circle>
+                  </svg>
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+                    <div style="width:28px;height:28px;background:linear-gradient(150deg,#2c433f,#1b2a27);border:1px solid #4a716a;display:flex;align-items:center;justify-content:center;color:#a8d8cf;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-rod"></use></svg>
+                    </div>
+                  </div>
+                  <div style="position:absolute;bottom:-3px;right:-4px;background:linear-gradient(180deg,#8ec9bd,#356b82);color:#061318;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;padding:0 5px;border:1px solid #332920;clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px);">22</div>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Fishing</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#b6a583;margin-top:2px;">410 / 1,420 xp</div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11.5px;color:#8ec9bd;">29%</div>
+              </div>
+            </div>
+
+            <div style="position:relative;background:linear-gradient(160deg,#4a3a27,#34271c);border:1px solid #6b4a2c;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 6px rgba(0,0,0,.6);padding:10px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="position:absolute;left:0;top:10px;bottom:10px;width:2px;background:#eda23c;box-shadow:0 0 9px rgba(237,162,60,.6);"></div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="position:relative;width:50px;height:50px;flex-shrink:0;">
+                  <svg width="50" height="50" viewBox="0 0 50 50" style="transform:rotate(-90deg);display:block;">
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#5c4a30" stroke-width="5.5"></circle>
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#f5ad52" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="131.9" stroke-dashoffset="66"></circle>
+                  </svg>
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+                    <div style="width:28px;height:28px;background:linear-gradient(150deg,#573f26,#38291a);border:1px solid #83572d;display:flex;align-items:center;justify-content:center;color:#ffcd96;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg>
+                    </div>
+                  </div>
+                  <div style="position:absolute;bottom:-3px;right:-4px;background:linear-gradient(180deg,#ffc78f,#a86a1c);color:#1d0c04;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;padding:0 5px;border:1px solid #332920;clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px);">19</div>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Cooking</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#b6a583;margin-top:2px;">640 / 1,280 xp</div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11.5px;color:#ffc78f;">50%</div>
+              </div>
+            </div>
+
+            <div style="position:relative;background:linear-gradient(160deg,#453829,#342a20);border:1px solid #634a43;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 22px rgba(237,162,60,.09),0 2px 6px rgba(0,0,0,.6);padding:10px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="position:absolute;left:0;top:10px;bottom:10px;width:2px;background:#c6a3d8;box-shadow:0 0 10px rgba(195,154,232,.6);"></div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="position:relative;width:50px;height:50px;flex-shrink:0;">
+                  <div style="position:absolute;inset:-7px;border-radius:50%;background:radial-gradient(circle,rgba(237,162,60,.32),rgba(237,162,60,0) 66%);animation:heat 2.4s ease-in-out infinite;"></div>
+                  <svg width="50" height="50" viewBox="0 0 50 50" style="transform:rotate(-90deg);display:block;position:relative;">
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#5c4a30" stroke-width="5.5"></circle>
+                    <circle cx="25" cy="25" r="21" fill="none" stroke="#c6a3d8" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="131.9" stroke-dashoffset="12"></circle>
+                  </svg>
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+                    <div style="width:28px;height:28px;background:linear-gradient(150deg,#4c3c38,#372a25);border:1px solid #705765;display:flex;align-items:center;justify-content:center;color:#e0cbe8;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hammer"></use></svg>
+                    </div>
+                  </div>
+                  <div style="position:absolute;bottom:-3px;right:-4px;background:linear-gradient(180deg,#c6a3d8,#75568c);color:#150d1c;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;padding:0 5px;border:1px solid #332920;clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px);">67</div>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Smithing</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#b6a583;margin-top:2px;">8,910 / 9,640 xp</div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11.5px;color:#ffd6a0;">91%</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div style="display:flex;background:linear-gradient(180deg,#423527,#302620);border-top:1px solid #6b5436;box-shadow:0 -2px 10px rgba(0,0,0,.7);padding:6px 2px 8px;flex-shrink:0;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#ffd6a0;">
+            <div style="position:absolute;top:0;left:24%;right:24%;height:2px;background:#eda23c;box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-house"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Town</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-map"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Travel</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Cook</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-stall"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Shop</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-scroll"></use></svg>
+            <div style="position:absolute;top:3px;right:23%;width:7px;height:7px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 7px rgba(237,162,60,.9);"></div>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Quests</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bag"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Bag</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= HERO / CHARACTER ================= -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#a69573;margin-bottom:9px;">02 &mdash; HERO SHEET <span style="color:#eda23c;">(NEW &mdash; opens from the HUD name)</span></div>
+      <div style="width:400px;height:830px;display:flex;flex-direction:column;overflow:hidden;background:#332920;border:1px solid #5e4b2d;box-shadow:0 20px 50px rgba(0,0,0,.7);">
+        <div style="position:relative;background:linear-gradient(180deg,#4c3d2a,#372c20);border-bottom:1px solid #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.07);padding:12px 13px;display:flex;align-items:center;gap:11px;flex-shrink:0;">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#eda23c,transparent);opacity:.5;"></div>
+          <button type="button" style="width:34px;height:34px;flex-shrink:0;border:1px solid #7a6339;background:linear-gradient(180deg,#4d3e2b,#332a1f);color:#ede3cd;display:flex;align-items:center;justify-content:center;cursor:pointer;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15,5 L8,12 L15,19"></path></svg>
+          </button>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:17px;color:#f0ebe0;letter-spacing:.03em;">The Hero's Ledger</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#a69573;margin-top:2px;">ADVENTURER &middot; COMBAT LV 12</div>
+          </div>
+        </div>
+
+        <div style="flex:1;overflow:hidden;background:radial-gradient(ellipse 130% 45% at 50% 0%,#3d3123,#332920 70%),#332920;padding:14px 13px;">
+
+          <!-- portrait + stats -->
+          <div style="display:flex;gap:12px;">
+            <div style="position:relative;width:150px;flex-shrink:0;">
+              <div style="position:relative;height:196px;background:radial-gradient(ellipse 70% 60% at 50% 32%,#3d3123,#332a21 78%);border:1px solid #72593c;box-shadow:inset 0 0 40px rgba(0,0,0,.9);overflow:hidden;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));">
+                <div style="position:absolute;left:0;right:0;bottom:0;height:52%;background:linear-gradient(180deg,rgba(237,162,60,0),rgba(237,162,60,.13));"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#cfd6da;">
+                  <svg width="112" height="112" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 16px rgba(255,140,60,.28));"><use href="#g-hero"></use></svg>
+                </div>
+                <div style="position:absolute;top:9px;left:9px;color:#ffc46b;opacity:.9;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-sword"></use></svg>
+                </div>
+                <div style="position:absolute;top:9px;right:9px;color:#877750;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 2.5"><use href="#g-shield"></use></svg>
+                </div>
+                <div style="position:absolute;left:0;right:0;bottom:0;padding:7px 9px;background:linear-gradient(180deg,rgba(8,10,12,0),rgba(8,10,12,.92));">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#bfaf8c;">HP</div>
+                  <div style="position:relative;height:9px;margin-top:3px;background:#241c13;border:1px solid #6b5436;">
+                    <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background:linear-gradient(180deg,#ff9b6b,#bf6330);box-shadow:0 0 9px rgba(212,115,64,.6);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;">
+              <div style="position:relative;background:linear-gradient(160deg,#4a382b,#33261e);border:1px solid #644732;padding:9px 10px;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+                <div style="position:absolute;left:0;top:9px;bottom:9px;width:2px;background:#c86a3a;box-shadow:0 0 8px rgba(200,106,58,.6);"></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#bfaf8c;">ATTACK</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:26px;color:#ff8f6e;line-height:1.05;text-shadow:0 0 14px rgba(240,160,80,.35);">26</div>
+                  </div>
+                  <div style="color:#7d5c3a;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-sword"></use></svg></div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#a69573;margin-top:3px;">12 level + 14 weapon</div>
+              </div>
+              <div style="position:relative;background:linear-gradient(160deg,#3b3d2c,#302c20);border:1px solid #5d5433;padding:9px 10px;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+                <div style="position:absolute;left:0;top:9px;bottom:9px;width:2px;background:#63a396;box-shadow:0 0 8px rgba(111,168,196,.55);"></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#bfaf8c;">DEFENCE</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:26px;color:#a8d8cf;line-height:1.05;">6</div>
+                  </div>
+                  <div style="color:#4f847a;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-shield"></use></svg></div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#a69573;margin-top:3px;">6 level + 0 armour</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- equipment slots -->
+          <div style="display:flex;align-items:center;gap:9px;margin:16px 0 10px;">
+            <div style="width:6px;height:6px;background:#ffc46b;transform:rotate(45deg);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">CARRIED</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#72593c,transparent);"></div>
+          </div>
+
+          <div style="display:flex;gap:9px;">
+            <div style="flex:1;position:relative;background:linear-gradient(160deg,#4c3c25,#352a1d);border:1px solid #83662f;box-shadow:0 0 18px rgba(255,180,80,.1);padding:11px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="display:flex;align-items:center;gap:9px;">
+                <div style="width:38px;height:38px;flex-shrink:0;border:1px solid #a58236;background:linear-gradient(150deg,#503f26,#37291a);display:flex;align-items:center;justify-content:center;color:#ffc46b;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-sword"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#ad975f;">WEAPON</div>
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13px;color:#f0ebe0;line-height:1.2;margin-top:1px;">Steel Sword</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#ffc46b;margin-top:2px;">+14 ATK</div>
+                </div>
+              </div>
+            </div>
+            <div style="flex:1;position:relative;background:#3d3126;border:1px dashed #72593c;padding:11px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="display:flex;align-items:center;gap:9px;">
+                <div style="width:38px;height:38px;flex-shrink:0;border:1px dashed #72593c;display:flex;align-items:center;justify-content:center;color:#63563a;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-shield"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#8c7c58;">ARMOUR</div>
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13px;color:#8c7c58;line-height:1.2;margin-top:1px;">Empty</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7b6c4c;margin-top:2px;">buy at the stall</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- skill ledger -->
+          <div style="display:flex;align-items:center;gap:9px;margin:16px 0 10px;">
+            <div style="width:6px;height:6px;background:#cbb28a;transform:rotate(45deg);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">LEDGER OF SKILLS</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#72593c,transparent);"></div>
+          </div>
+
+          <div style="background:#382d22;border:1px solid #5e4b2d;box-shadow:inset 0 2px 8px rgba(0,0,0,.8);">
+            <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:1px solid #403322;">
+              <div style="width:2px;height:22px;background:#8fbb5a;box-shadow:0 0 7px rgba(127,176,85,.5);"></div>
+              <div style="color:#bcd98f;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-axe"></use></svg></div>
+              <div style="flex:1;font-size:13px;color:#ede3cd;">Woodcutting</div>
+              <div style="width:74px;position:relative;height:5px;background:#241c13;border:1px solid #5e4b2d;">
+                <div style="position:absolute;inset:0;width:65%;background:#8fbb5a;"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:#f0ebe0;width:22px;text-align:right;">31</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:1px solid #403322;">
+              <div style="width:2px;height:22px;background:#d0a03c;box-shadow:0 0 7px rgba(208,160,60,.5);"></div>
+              <div style="color:#e8cd8a;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-pick"></use></svg></div>
+              <div style="flex:1;font-size:13px;color:#ede3cd;">Mining</div>
+              <div style="width:74px;position:relative;height:5px;background:#241c13;border:1px solid #5e4b2d;">
+                <div style="position:absolute;inset:0;width:56%;background:#d0a03c;"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:#f0ebe0;width:22px;text-align:right;">28</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:1px solid #403322;">
+              <div style="width:2px;height:22px;background:#63a396;box-shadow:0 0 7px rgba(111,168,196,.5);"></div>
+              <div style="color:#a8d8cf;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-rod"></use></svg></div>
+              <div style="flex:1;font-size:13px;color:#ede3cd;">Fishing</div>
+              <div style="width:74px;position:relative;height:5px;background:#241c13;border:1px solid #5e4b2d;">
+                <div style="position:absolute;inset:0;width:29%;background:#63a396;"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:#f0ebe0;width:22px;text-align:right;">22</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:1px solid #403322;">
+              <div style="width:2px;height:22px;background:#eda23c;box-shadow:0 0 7px rgba(237,162,60,.5);"></div>
+              <div style="color:#ffcd96;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg></div>
+              <div style="flex:1;font-size:13px;color:#ede3cd;">Cooking</div>
+              <div style="width:74px;position:relative;height:5px;background:#241c13;border:1px solid #5e4b2d;">
+                <div style="position:absolute;inset:0;width:50%;background:#eda23c;"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:#f0ebe0;width:22px;text-align:right;">19</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:1px solid #403322;">
+              <div style="width:2px;height:22px;background:#c6a3d8;box-shadow:0 0 7px rgba(195,154,232,.5);"></div>
+              <div style="color:#e0cbe8;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hammer"></use></svg></div>
+              <div style="flex:1;font-size:13px;color:#ede3cd;">Smithing</div>
+              <div style="width:74px;position:relative;height:5px;background:#241c13;border:1px solid #5e4b2d;">
+                <div style="position:absolute;inset:0;width:91%;background:#c6a3d8;box-shadow:0 0 8px rgba(195,154,232,.7);"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:#f0ebe0;width:22px;text-align:right;">67</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;background:rgba(200,106,58,.06);">
+              <div style="width:2px;height:22px;background:#c86a3a;box-shadow:0 0 7px rgba(200,106,58,.5);"></div>
+              <div style="color:#eeb98e;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-sword"></use></svg></div>
+              <div style="flex:1;font-size:13px;color:#e8e2d6;font-weight:600;">Combat</div>
+              <div style="width:74px;position:relative;height:5px;background:#241c13;border:1px solid #5e4b2d;">
+                <div style="position:absolute;inset:0;width:38%;background:#c86a3a;"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:#f0ebe0;width:22px;text-align:right;">12</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:9px;margin-top:12px;">
+            <div style="flex:1;background:#382d22;border:1px solid #5e4b2d;padding:8px 10px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#a69573;">FOES FELLED</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:17px;color:#e8e2d6;">148</div>
+            </div>
+            <div style="flex:1;background:#382d22;border:1px solid #5e4b2d;padding:8px 10px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#a69573;">QUESTS DONE</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:17px;color:#e8e2d6;">3 / 5</div>
+            </div>
+            <div style="flex:1;background:#382d22;border:1px solid #5e4b2d;padding:8px 10px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#a69573;">PLACES KNOWN</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:17px;color:#e8e2d6;">10 / 15</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;background:linear-gradient(180deg,#423527,#302620);border-top:1px solid #6b5436;box-shadow:0 -2px 10px rgba(0,0,0,.7);padding:6px 2px 8px;flex-shrink:0;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#ffd6a0;">
+            <div style="position:absolute;top:0;left:24%;right:24%;height:2px;background:#eda23c;box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-house"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Town</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-map"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Travel</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Cook</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-stall"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Shop</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-scroll"></use></svg>
+            <div style="position:absolute;top:3px;right:23%;width:7px;height:7px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 7px rgba(237,162,60,.9);"></div>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Quests</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bag"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Bag</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TRAVEL ================= -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#a69573;margin-bottom:9px;">03 &mdash; TRAVEL</div>
+      <div style="width:400px;height:830px;display:flex;flex-direction:column;overflow:hidden;background:#332920;border:1px solid #5e4b2d;box-shadow:0 20px 50px rgba(0,0,0,.7);">
+        <div style="position:relative;background:linear-gradient(180deg,#4c3d2a,#372c20 60%,#2e251b);border-bottom:1px solid #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 10px rgba(0,0,0,.7);flex-shrink:0;">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#eda23c,transparent);opacity:.5;"></div>
+          <div style="padding:11px 13px 10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;cursor:pointer;">
+                <div style="width:36px;height:36px;flex-shrink:0;background:linear-gradient(145deg,#4f402d,#3d3123);border:1px solid #7a6339;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 12px rgba(237,162,60,.14);clip-path:polygon(22% 0,78% 0,100% 22%,100% 78%,78% 100%,22% 100%,0 78%,0 22%);display:flex;align-items:center;justify-content:center;color:#ffc78f;">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hero"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15.5px;letter-spacing:.03em;color:#f0ebe0;line-height:1.1;text-shadow:0 0 14px rgba(255,140,60,.22);">Adventurer</div>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#a69573" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9,5 L17,12 L9,19"></path></svg>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                    <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;color:#2e251b;background:#cbb28a;padding:1px 5px;">CB 12</div>
+                    <div style="font-size:10.5px;letter-spacing:.06em;color:#a69573;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Birchwood Grove</div>
+                  </div>
+                </div>
+              </div>
+              <div style="flex-shrink:0;text-align:right;padding-left:10px;border-left:1px solid #60492c;display:flex;align-items:center;gap:6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffc46b" stroke-width="1.8"><use href="#g-coin"></use></svg>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:#a69573;text-align:left;">GOLD</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:#ffc46b;line-height:1.15;text-shadow:0 0 10px rgba(255,170,60,.3);">1,284</div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:11px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">HP</div>
+              <div style="flex:1;position:relative;height:15px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background:linear-gradient(180deg,#ff9b6b,#d47340 40%,#94512c);box-shadow:0 0 12px rgba(212,115,64,.55);"></div>
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background-image:repeating-linear-gradient(115deg,rgba(255,220,180,.16) 0 3px,transparent 3px 8px);"></div>
+                <div style="position:absolute;top:1px;left:1px;height:3px;width:64%;background:linear-gradient(180deg,rgba(255,225,200,.5),transparent);"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;color:#fff;letter-spacing:.06em;text-shadow:0 1px 2px rgba(0,0,0,.9);">43 / 68</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">XP</div>
+              <div style="flex:1;position:relative;height:6px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:38%;background:linear-gradient(180deg,#ffd28a,#e2952c);box-shadow:0 0 9px rgba(255,180,70,.5);"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0 6px 4px;">
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+          </div>
+        </div>
+
+        <div style="background:#3d3123;border-bottom:1px solid #684f30;padding:8px 13px;display:flex;align-items:center;gap:9px;flex-shrink:0;">
+          <div style="color:#bcd98f;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-log"></use></svg></div>
+          <div style="font-size:11.5px;font-weight:600;color:#e8e2d6;flex-shrink:0;">Willow Tree</div>
+          <div style="flex:1;position:relative;height:6px;background:#241c13;border:1px solid #6b5436;">
+            <div style="position:absolute;top:1px;bottom:1px;left:1px;width:41%;background:linear-gradient(180deg,#b8dd86,#5b7c33);box-shadow:0 0 8px rgba(127,176,85,.5);"></div>
+          </div>
+          <button type="button" style="flex-shrink:0;border:1px solid #7a6339;background:#403322;color:#bfaf8c;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;padding:4px 8px;cursor:pointer;">STOP</button>
+        </div>
+
+        <div style="flex:1;overflow:hidden;background:radial-gradient(ellipse 130% 45% at 50% 0%,#3d3123,#332920 70%),#332920;padding:13px;">
+
+          <div style="border:1px solid #72593c;background:#382d22;padding:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 3px 10px rgba(0,0,0,.6);">
+            <svg viewBox="0 0 400 285" style="display:block;width:100%;height:auto;">
+              <defs>
+                <radialGradient id="tBg" cx="50%" cy="72%" r="88%"><stop offset="0%" stop-color="#3e3124"></stop><stop offset="100%" stop-color="#2b231b"></stop></radialGradient>
+                <linearGradient id="tFor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c4630"></stop><stop offset="100%" stop-color="#324224"></stop></linearGradient>
+                <linearGradient id="tRock" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4a4433"></stop><stop offset="100%" stop-color="#453923"></stop></linearGradient>
+                <linearGradient id="tWat" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b5a54"></stop><stop offset="100%" stop-color="#2a403c"></stop></linearGradient>
+                <linearGradient id="tCorr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5c3c2c"></stop><stop offset="100%" stop-color="#3a2920"></stop></linearGradient>
+              </defs>
+              <rect width="400" height="285" fill="url(#tBg)"></rect>
+
+              <path d="M6,132 C50,106 84,142 116,134 C152,126 158,178 144,220 C110,256 34,258 6,230 Z" fill="url(#tFor)" stroke="#5b8148" stroke-width="1"></path>
+              <path d="M262,126 C306,104 378,116 396,148 C398,194 366,246 314,250 C264,246 248,188 262,126 Z" fill="url(#tRock)" stroke="#7b6d4a" stroke-width="1"></path>
+              <path d="M6,32 C48,16 90,38 98,70 C106,106 60,124 24,114 C6,102 0,60 6,32 Z" fill="url(#tWat)" stroke="#6f9a90" stroke-width="1"></path>
+              <path d="M12,268 C34,244 84,244 108,264 C114,282 98,290 62,290 C30,290 14,282 12,268 Z" fill="url(#tWat)" stroke="#6f9a90" stroke-width="1"></path>
+              <path d="M150,6 C226,-4 302,16 318,54 C332,98 262,122 204,114 C150,106 138,44 150,6 Z" fill="url(#tCorr)" stroke="#a05c3c" stroke-width="1" stroke-dasharray="6 4"></path>
+
+              <path d="M24,150 l9,-6 M46,166 l9,-6 M68,182 l9,-6 M36,196 l9,-6 M88,148 l9,-6" stroke="#5b8148" stroke-width="1" opacity=".45"></path>
+              <path d="M290,140 h10 M312,162 h10 M334,184 h10 M296,196 h10" stroke="#7b6d4a" stroke-width="1" opacity=".45"></path>
+              <path d="M188,32 l7,7 M226,52 l7,7 M262,30 l7,7" stroke="#a05c3c" stroke-width="1" opacity=".5"></path>
+
+              <path d="M200,255 L95,215" stroke="#d0a03c" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+              <path d="M200,255 L305,215" stroke="#d0a03c" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+              <path d="M200,255 L55,255" stroke="#d0a03c" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+              <path d="M200,255 L345,250" stroke="#d0a03c" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+              <path d="M95,215 L40,150" stroke="#d0a03c" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+              <path d="M305,215 L360,150" stroke="#d0a03c" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+              <path d="M55,255 L35,75" stroke="#d0a03c" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+              <path d="M200,255 L200,190" stroke="#d0a03c" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+              <path d="M200,190 L200,132" stroke="#d0a03c" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+              <path d="M200,132 L128,95" stroke="#877750" stroke-width="2" stroke-dasharray="3 7" fill="none"></path>
+              <path d="M200,132 L272,95" stroke="#877750" stroke-width="2" stroke-dasharray="3 7" fill="none"></path>
+              <path d="M128,95 L200,48" stroke="#877750" stroke-width="2" stroke-dasharray="3 7" fill="none"></path>
+              <path d="M272,95 L200,48" stroke="#877750" stroke-width="2" stroke-dasharray="3 7" fill="none"></path>
+              <path d="M200,48 L85,20" stroke="#877750" stroke-width="2" stroke-dasharray="3 7" fill="none"></path>
+              <path d="M200,48 L315,20" stroke="#877750" stroke-width="2" stroke-dasharray="3 7" fill="none"></path>
+
+              <g>
+                <path d="M200,241 L212,248 L212,262 L200,269 L188,262 L188,248 Z" fill="#241d10" stroke="#ffc46b" stroke-width="1.8"></path>
+                <use href="#g-house" x="192" y="247" width="16" height="16" fill="none" stroke="#ffd28a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="200" y="281" font-family="Cinzel,serif" font-size="10" font-weight="700" fill="#ffd28a" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Thornwake</text>
+              </g>
+
+              <g>
+                <circle cx="95" cy="215" r="17" fill="none" stroke="#b8dd86" stroke-width="1.4" opacity=".5" style="transform-origin:95px 215px;animation:pulsering 1.9s ease-out infinite;"></circle>
+                <path d="M95,203 L105,209 L105,221 L95,227 L85,221 L85,209 Z" fill="#25301c" stroke="#b8dd86" stroke-width="1.8"></path>
+                <use href="#g-tree" x="88" y="208" width="14" height="14" fill="none" stroke="#cfeaa6" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="95" y="240" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#cfeaa6" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Birchwood</text>
+              </g>
+              <g>
+                <path d="M305,203 L315,209 L315,221 L305,227 L295,221 L295,209 Z" fill="#3a2f18" stroke="#d0a03c" stroke-width="1.5"></path>
+                <use href="#g-rock" x="298" y="208" width="14" height="14" fill="none" stroke="#e8cd8a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="305" y="240" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#e8cd8a" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Stonevein</text>
+              </g>
+              <g>
+                <path d="M55,243 L65,249 L65,261 L55,267 L45,261 L45,249 Z" fill="#2a403c" stroke="#63a396" stroke-width="1.5"></path>
+                <use href="#g-wave" x="48" y="248" width="14" height="14" fill="none" stroke="#a8d8cf" stroke-width="1.9" stroke-linecap="round"></use>
+                <text x="55" y="280" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#a8d8cf" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Silverbrook</text>
+              </g>
+              <g>
+                <path d="M345,238 L355,244 L355,256 L345,262 L335,256 L335,244 Z" fill="#372620" stroke="#c86a3a" stroke-width="1.5"></path>
+                <use href="#g-beast" x="338" y="243" width="14" height="14" fill="none" stroke="#eeb98e" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="345" y="275" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#eeb98e" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Deep Woods</text>
+              </g>
+              <g>
+                <path d="M200,178 L210,184 L210,196 L200,202 L190,196 L190,184 Z" fill="#372620" stroke="#c86a3a" stroke-width="1.5"></path>
+                <use href="#g-rat" x="193" y="183" width="14" height="14" fill="none" stroke="#eeb98e" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="200" y="172" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#eeb98e" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Miller's Bridge</text>
+              </g>
+              <g>
+                <circle cx="200" cy="132" r="18" fill="none" stroke="#eda23c" stroke-width="1.5" opacity=".35"></circle>
+                <path d="M200,120 L210,126 L210,138 L200,144 L190,138 L190,126 Z" fill="#4c3520" stroke="#f5ad52" stroke-width="1.75"></path>
+                <use href="#g-anvil" x="193" y="125" width="14" height="14" fill="none" stroke="#ffcd96" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="200" y="114" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#ffcd96" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Emberforge</text>
+              </g>
+              <g>
+                <path d="M40,138 L50,144 L50,156 L40,162 L30,156 L30,144 Z" fill="#25301c" stroke="#8fbb5a" stroke-width="1.5"></path>
+                <use href="#g-tree" x="33" y="143" width="14" height="14" fill="none" stroke="#cfeaa6" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="42" y="132" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#cfeaa6" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Frostpine</text>
+              </g>
+              <g>
+                <path d="M360,138 L370,144 L370,156 L360,162 L350,156 L350,144 Z" fill="#4c3520" stroke="#f5ad52" stroke-width="1.5"></path>
+                <use href="#g-flame" x="353" y="143" width="14" height="14" fill="none" stroke="#ffcd96" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="356" y="132" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#ffcd96" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Cinder Depths</text>
+              </g>
+              <g>
+                <path d="M35,63 L45,69 L45,81 L35,87 L25,81 L25,69 Z" fill="#2a403c" stroke="#63a396" stroke-width="1.5"></path>
+                <use href="#g-wave" x="28" y="68" width="14" height="14" fill="none" stroke="#a8d8cf" stroke-width="1.9" stroke-linecap="round"></use>
+                <text x="40" y="57" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#a8d8cf" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">Stormcoast</text>
+              </g>
+
+              <g opacity=".62">
+                <path d="M128,83 L138,89 L138,101 L128,107 L118,101 L118,89 Z" fill="#372f20" stroke="#877750" stroke-width="1.4" stroke-dasharray="3 3"></path>
+                <use href="#g-lock" x="121" y="88" width="14" height="14" fill="none" stroke="#8b7c5c" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="128" y="120" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#8b7c5c" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">???</text>
+              </g>
+              <g opacity=".62">
+                <path d="M272,83 L282,89 L282,101 L272,107 L262,101 L262,89 Z" fill="#372f20" stroke="#877750" stroke-width="1.4" stroke-dasharray="3 3"></path>
+                <use href="#g-lock" x="265" y="88" width="14" height="14" fill="none" stroke="#8b7c5c" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="272" y="120" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#8b7c5c" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">???</text>
+              </g>
+              <g opacity=".62">
+                <path d="M200,36 L210,42 L210,54 L200,60 L190,54 L190,42 Z" fill="#372f20" stroke="#877750" stroke-width="1.4" stroke-dasharray="3 3"></path>
+                <use href="#g-lock" x="193" y="41" width="14" height="14" fill="none" stroke="#8b7c5c" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="200" y="73" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#8b7c5c" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">???</text>
+              </g>
+              <g opacity=".62">
+                <path d="M85,8 L95,14 L95,26 L85,32 L75,26 L75,14 Z" fill="#372f20" stroke="#877750" stroke-width="1.4" stroke-dasharray="3 3"></path>
+                <use href="#g-lock" x="78" y="13" width="14" height="14" fill="none" stroke="#8b7c5c" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="85" y="45" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#8b7c5c" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">???</text>
+              </g>
+              <g opacity=".62">
+                <path d="M315,8 L325,14 L325,26 L315,32 L305,26 L305,14 Z" fill="#372f20" stroke="#877750" stroke-width="1.4" stroke-dasharray="3 3"></path>
+                <use href="#g-lock" x="308" y="13" width="14" height="14" fill="none" stroke="#8b7c5c" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></use>
+                <text x="315" y="45" font-family="Cinzel,serif" font-size="9" font-weight="700" fill="#8b7c5c" text-anchor="middle" style="paint-order:stroke;stroke:#2b231b;stroke-width:3.5;">???</text>
+              </g>
+
+              <g transform="translate(372,258)" opacity=".65">
+                <circle r="15" fill="#332a21" stroke="#877750" stroke-width="1"></circle>
+                <path d="M0,-13 L3,0 L0,13 L-3,0 Z" fill="#ffc46b"></path>
+                <path d="M-13,0 L0,2.4 L13,0 L0,-2.4 Z" fill="#7b6c4c"></path>
+              </g>
+            </svg>
+          </div>
+
+          <div style="position:relative;margin-top:12px;background:linear-gradient(160deg,#3d402a,#313524);border:1px solid #615833;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 6px rgba(0,0,0,.6);padding:12px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#8fbb5a;box-shadow:0 0 9px rgba(127,176,85,.5);"></div>
+            <div style="display:flex;align-items:center;gap:9px;">
+              <div style="color:#cfeaa6;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-tree"></use></svg></div>
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:#f0ebe0;">Birchwood Grove</div>
+            </div>
+            <div style="font-size:13.5px;line-height:1.6;color:#c6b797;margin-top:7px;text-wrap:pretty;">A quiet stand of birch and yew at the forest edge. Axes ring out here from dawn to dusk.</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8fbb5a;margin-top:8px;letter-spacing:.06em;">WOODCUTTING LV 31 &middot; 1,240/2,180 XP</div>
+          </div>
+
+          <div style="position:relative;margin-top:10px;background:linear-gradient(160deg,#3d402a,#313524);border:1px solid #615833;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 6px rgba(0,0,0,.6);padding:11px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#8fbb5a;box-shadow:0 0 9px rgba(127,176,85,.5);"></div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:44px;height:44px;flex-shrink:0;background:linear-gradient(150deg,#3b452c,#313524);border:1px solid #5d6b41;box-shadow:inset 0 1px 0 rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;color:#cfeaa6;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-log"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Willow Tree</div>
+                <div style="font-size:12.5px;color:#b6a583;margin-top:1px;">+22 xp &middot; yields Willow Log</div>
+              </div>
+              <button type="button" style="flex-shrink:0;border:1px solid #7d4a22;background:linear-gradient(180deg,#c26a36,#7d4a1e);color:#ffe8d8;font-weight:700;font-size:12px;letter-spacing:.1em;padding:10px 15px;text-transform:uppercase;box-shadow:inset 0 1px 0 rgba(255,190,160,.35),0 0 14px rgba(196,110,54,.28);cursor:pointer;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">Stop</button>
+            </div>
+            <div style="margin-top:11px;position:relative;height:10px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+              <div style="position:absolute;top:1px;bottom:1px;left:1px;width:41%;background:linear-gradient(180deg,#d3eda8,#8fbb5a 45%,#3d5c28);box-shadow:0 0 12px rgba(127,176,85,.55);"></div>
+              <div style="position:absolute;top:1px;bottom:1px;left:1px;width:41%;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.2) 0 3px,transparent 3px 9px);"></div>
+              <div style="position:absolute;top:1px;bottom:1px;left:calc(41% - 2px);width:3px;background:#f2ffe0;box-shadow:0 0 10px #b8dd86;"></div>
+            </div>
+          </div>
+
+          <div style="position:relative;margin-top:9px;background:linear-gradient(160deg,#373224,#2f291f);border:1px solid #4b462e;padding:11px;opacity:.5;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:44px;height:44px;flex-shrink:0;border:1px dashed #72593c;display:flex;align-items:center;justify-content:center;color:#7b6c4c;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-lock"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#bfaf8c;">Yew Tree</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a69573;margin-top:2px;">REQUIRES WOODCUTTING 50</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;background:linear-gradient(180deg,#423527,#302620);border-top:1px solid #6b5436;box-shadow:0 -2px 10px rgba(0,0,0,.7);padding:6px 2px 8px;flex-shrink:0;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-house"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Town</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#ffd6a0;">
+            <div style="position:absolute;top:0;left:24%;right:24%;height:2px;background:#eda23c;box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-map"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Travel</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Cook</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-stall"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Shop</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-scroll"></use></svg>
+            <div style="position:absolute;top:3px;right:23%;width:7px;height:7px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 7px rgba(237,162,60,.9);"></div>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Quests</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bag"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Bag</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= COMBAT ================= -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#a69573;margin-bottom:9px;">04 &mdash; COMBAT</div>
+      <div style="width:400px;height:830px;display:flex;flex-direction:column;overflow:hidden;background:#332920;border:1px solid #5e4b2d;box-shadow:0 20px 50px rgba(0,0,0,.7);">
+        <div style="position:relative;background:linear-gradient(180deg,#4c3d2a,#372c20 60%,#2e251b);border-bottom:1px solid #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 10px rgba(0,0,0,.7);flex-shrink:0;">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#eda23c,transparent);opacity:.5;"></div>
+          <div style="padding:11px 13px 10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;cursor:pointer;">
+                <div style="width:36px;height:36px;flex-shrink:0;background:linear-gradient(145deg,#4f402d,#3d3123);border:1px solid #7a6339;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 12px rgba(237,162,60,.14);clip-path:polygon(22% 0,78% 0,100% 22%,100% 78%,78% 100%,22% 100%,0 78%,0 22%);display:flex;align-items:center;justify-content:center;color:#ffc78f;">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hero"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15.5px;letter-spacing:.03em;color:#f0ebe0;line-height:1.1;text-shadow:0 0 14px rgba(255,140,60,.22);">Adventurer</div>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#a69573" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9,5 L17,12 L9,19"></path></svg>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                    <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;color:#2e251b;background:#cbb28a;padding:1px 5px;">CB 12</div>
+                    <div style="font-size:10.5px;letter-spacing:.06em;color:#a69573;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">The Deep Woods</div>
+                  </div>
+                </div>
+              </div>
+              <div style="flex-shrink:0;text-align:right;padding-left:10px;border-left:1px solid #60492c;display:flex;align-items:center;gap:6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffc46b" stroke-width="1.8"><use href="#g-coin"></use></svg>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:#a69573;text-align:left;">GOLD</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:#ffc46b;line-height:1.15;text-shadow:0 0 10px rgba(255,170,60,.3);">1,284</div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:11px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">HP</div>
+              <div style="flex:1;position:relative;height:15px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:46%;background:linear-gradient(180deg,#ff9b6b,#d47340 40%,#94512c);box-shadow:0 0 12px rgba(212,115,64,.55);"></div>
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:46%;background-image:repeating-linear-gradient(115deg,rgba(255,220,180,.16) 0 3px,transparent 3px 8px);"></div>
+                <div style="position:absolute;top:1px;left:1px;height:3px;width:46%;background:linear-gradient(180deg,rgba(255,225,200,.5),transparent);"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;color:#fff;letter-spacing:.06em;text-shadow:0 1px 2px rgba(0,0,0,.9);">31 / 68</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">XP</div>
+              <div style="flex:1;position:relative;height:6px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:38%;background:linear-gradient(180deg,#ffd28a,#e2952c);box-shadow:0 0 9px rgba(255,180,70,.5);"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0 6px 4px;">
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+          </div>
+        </div>
+        <div style="flex:1;overflow:hidden;background:radial-gradient(ellipse 120% 50% at 50% 18%,#432f26,#332920 72%),#332920;padding:14px 13px;">
+
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+            <div style="width:6px;height:6px;background:#c26a36;transform:rotate(45deg);box-shadow:0 0 9px rgba(196,110,54,.9);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">ENGAGED</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#4a2b26,transparent);"></div>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;gap:8px;">
+            <div style="flex:1;text-align:center;">
+              <div style="position:relative;width:104px;height:104px;margin:0 auto 10px;background:radial-gradient(circle at 42% 30%,#2b3a2d,#2e3326 76%);border:2px solid #727a50;box-shadow:inset 0 0 32px rgba(0,0,0,.95),0 0 16px rgba(0,0,0,.6);clip-path:polygon(14% 0,86% 0,100% 14%,100% 86%,86% 100%,14% 100%,0 86%,0 14%);display:flex;align-items:center;justify-content:center;color:#cfd6da;">
+                <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hero"></use></svg>
+                <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 120%,rgba(237,162,60,.16),transparent 60%);"></div>
+              </div>
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13px;color:#e8e2d6;">You</div>
+              <div style="margin-top:7px;position:relative;height:11px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:46%;background:linear-gradient(180deg,#ff9b6b,#bf6330);box-shadow:0 0 10px rgba(212,115,64,.6);"></div>
+                <div style="position:absolute;top:1px;bottom:1px;left:calc(46% - 2px);width:14%;background:rgba(255,120,90,.28);"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#bfaf8c;margin-top:4px;">31 / 68</div>
+            </div>
+
+            <div style="padding-top:40px;font-family:'Cinzel',serif;font-weight:900;font-size:14px;color:#c26a36;text-shadow:0 0 14px rgba(196,110,54,.8);">VS</div>
+
+            <div style="flex:1;text-align:center;position:relative;">
+              <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:26px;color:#ffd0b0;text-shadow:0 0 18px rgba(240,150,70,1),0 2px 4px rgba(0,0,0,.9);z-index:5;animation:emberrise 1.4s ease-out infinite;">-14</div>
+              <div style="position:relative;width:104px;height:104px;margin:0 auto 10px;background:radial-gradient(circle at 42% 30%,#523830,#2b1d18 76%);border:2px solid #7a4632;box-shadow:inset 0 0 32px rgba(0,0,0,.95),0 0 22px rgba(196,120,60,.22);clip-path:polygon(14% 0,86% 0,100% 14%,100% 86%,86% 100%,14% 100%,0 86%,0 14%);display:flex;align-items:center;justify-content:center;color:#eeb98e;">
+                <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-ghost"></use></svg>
+              </div>
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13px;color:#e8e2d6;">Forest Goblin</div>
+              <div style="margin-top:7px;position:relative;height:11px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:31%;background:linear-gradient(180deg,#ff9b6b,#bf6330);box-shadow:0 0 10px rgba(212,115,64,.6);"></div>
+                <div style="position:absolute;top:1px;bottom:1px;left:calc(31% - 2px);width:22%;background:rgba(255,120,90,.28);"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#bfaf8c;margin-top:4px;">6 / 20</div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;position:relative;background:#2b231b;border:1px solid #5e4b2d;box-shadow:inset 0 2px 10px rgba(0,0,0,.95);padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.8;height:126px;overflow:hidden;">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,#684f30,transparent);"></div>
+            <div style="color:#877750;">A Forest Goblin blocks your path.</div>
+            <div style="color:#7b6c4c;">You strike the Forest Goblin for 9.</div>
+            <div style="color:#a69573;">The Forest Goblin hits you for 3.</div>
+            <div style="color:#bfaf8c;">You strike the Forest Goblin for 11.</div>
+            <div style="color:#ffd6a0;text-shadow:0 0 10px rgba(245,190,110,.35);">You strike the Forest Goblin for 14.</div>
+          </div>
+
+          <div style="display:flex;gap:7px;margin-top:12px;">
+            <button type="button" style="position:relative;overflow:hidden;flex:2;border:1px solid #7d4a22;background:linear-gradient(180deg,#c86a3a,#7d4a1e);color:#ffe8d8;font-weight:700;font-size:14px;letter-spacing:.13em;text-transform:uppercase;padding:14px;box-shadow:inset 0 1px 0 rgba(255,190,160,.35),0 0 20px rgba(196,110,54,.3);cursor:pointer;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+              Attack
+              <span style="position:absolute;top:0;bottom:0;left:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,220,190,.22),transparent);animation:sweep 3.2s ease-in-out infinite;"></span>
+            </button>
+            <button type="button" style="flex:1;border:1px solid #4d7a33;background:linear-gradient(180deg,#4b5733,#333d21);color:#b8dd86;font-weight:700;font-size:13px;letter-spacing:.06em;padding:14px 6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);cursor:pointer;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">Eat</button>
+            <button type="button" style="flex:1;border:1px solid #7a6339;background:linear-gradient(180deg,#4d3e2b,#332a1f);color:#ede3cd;font-weight:700;font-size:13px;letter-spacing:.06em;padding:14px 6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);cursor:pointer;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">Flee</button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:9px;margin:18px 0 11px;">
+            <div style="width:6px;height:6px;background:#cbb28a;transform:rotate(45deg);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">ALSO PROWLING HERE</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#72593c,transparent);"></div>
+          </div>
+
+          <div style="position:relative;background:linear-gradient(160deg,#4a382b,#33261e);border:1px solid #644732;box-shadow:0 2px 6px rgba(0,0,0,.6);padding:10px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+            <div style="position:absolute;left:0;top:10px;bottom:10px;width:2px;background:#c86a3a;"></div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:42px;height:42px;flex-shrink:0;background:radial-gradient(circle at 40% 30%,#563f37,#3a2b26);border:1px solid #7a533e;display:flex;align-items:center;justify-content:center;color:#eeb98e;clip-path:polygon(14% 0,86% 0,100% 14%,100% 86%,86% 100%,14% 100%,0 86%,0 14%);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-construct"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#e8e2d6;">Iron Golem</div>
+                <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#b6a583;">LV 35 &middot; 100 HP</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:8.5px;letter-spacing:.1em;color:#332920;background:#c86a3a;padding:1px 5px;">DEADLY</div>
+                </div>
+              </div>
+              <button type="button" style="flex-shrink:0;border:1px solid #7d4a22;background:linear-gradient(180deg,#c26a36,#7d4a1e);color:#ffe8d8;font-weight:700;font-size:11.5px;letter-spacing:.1em;padding:9px 13px;text-transform:uppercase;cursor:pointer;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">Fight</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;background:linear-gradient(180deg,#423527,#302620);border-top:1px solid #6b5436;box-shadow:0 -2px 10px rgba(0,0,0,.7);padding:6px 2px 8px;flex-shrink:0;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-house"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Town</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#ffd6a0;">
+            <div style="position:absolute;top:0;left:24%;right:24%;height:2px;background:#eda23c;box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-map"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Travel</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Cook</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-stall"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Shop</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-scroll"></use></svg>
+            <div style="position:absolute;top:3px;right:23%;width:7px;height:7px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 7px rgba(237,162,60,.9);"></div>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Quests</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bag"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Bag</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= COOK ================= -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#a69573;margin-bottom:9px;">05 &mdash; THE HEARTH</div>
+      <div style="width:400px;height:830px;display:flex;flex-direction:column;overflow:hidden;background:#332920;border:1px solid #5e4b2d;box-shadow:0 20px 50px rgba(0,0,0,.7);">
+        <div style="position:relative;background:linear-gradient(180deg,#4c3d2a,#372c20 60%,#2e251b);border-bottom:1px solid #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 10px rgba(0,0,0,.7);flex-shrink:0;">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#eda23c,transparent);opacity:.5;"></div>
+          <div style="padding:11px 13px 10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;cursor:pointer;">
+                <div style="width:36px;height:36px;flex-shrink:0;background:linear-gradient(145deg,#4f402d,#3d3123);border:1px solid #7a6339;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 12px rgba(237,162,60,.14);clip-path:polygon(22% 0,78% 0,100% 22%,100% 78%,78% 100%,22% 100%,0 78%,0 22%);display:flex;align-items:center;justify-content:center;color:#ffc78f;">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hero"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15.5px;letter-spacing:.03em;color:#f0ebe0;line-height:1.1;text-shadow:0 0 14px rgba(255,140,60,.22);">Adventurer</div>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#a69573" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9,5 L17,12 L9,19"></path></svg>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                    <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;color:#2e251b;background:#cbb28a;padding:1px 5px;">CB 12</div>
+                    <div style="font-size:10.5px;letter-spacing:.06em;color:#a69573;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">The Hearth</div>
+                  </div>
+                </div>
+              </div>
+              <div style="flex-shrink:0;text-align:right;padding-left:10px;border-left:1px solid #60492c;display:flex;align-items:center;gap:6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffc46b" stroke-width="1.8"><use href="#g-coin"></use></svg>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:#a69573;text-align:left;">GOLD</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:#ffc46b;line-height:1.15;text-shadow:0 0 10px rgba(255,170,60,.3);">1,284</div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:11px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">HP</div>
+              <div style="flex:1;position:relative;height:15px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background:linear-gradient(180deg,#ff9b6b,#d47340 40%,#94512c);box-shadow:0 0 12px rgba(212,115,64,.55);"></div>
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background-image:repeating-linear-gradient(115deg,rgba(255,220,180,.16) 0 3px,transparent 3px 8px);"></div>
+                <div style="position:absolute;top:1px;left:1px;height:3px;width:64%;background:linear-gradient(180deg,rgba(255,225,200,.5),transparent);"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;color:#fff;letter-spacing:.06em;text-shadow:0 1px 2px rgba(0,0,0,.9);">43 / 68</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">XP</div>
+              <div style="flex:1;position:relative;height:6px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:38%;background:linear-gradient(180deg,#ffd28a,#e2952c);box-shadow:0 0 9px rgba(255,180,70,.5);"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0 6px 4px;">
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+          </div>
+        </div>
+        <div style="flex:1;overflow:hidden;background:radial-gradient(ellipse 120% 40% at 50% 0%,#2a1a12,#332920 70%),#332920;padding:14px 13px;">
+
+          <div style="position:relative;background:linear-gradient(160deg,#3a2a1a,#37281a);border:1px solid #7d5228;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 28px rgba(237,162,60,.12);padding:13px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));">
+            <div style="position:absolute;left:0;top:12px;bottom:12px;width:2px;background:#eda23c;box-shadow:0 0 12px rgba(237,162,60,.7);"></div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="position:relative;color:#ffcd96;">
+                <div style="position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(237,162,60,.32),transparent 68%);animation:heat 2.2s ease-in-out infinite;"></div>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="position:relative;"><use href="#g-flame"></use></svg>
+              </div>
+              <div>
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:#f0ebe0;">The Hearth</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#ffc78f;margin-top:3px;letter-spacing:.06em;">COOKING LV 19 &middot; 640/1,280 XP</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:9px;margin:16px 0 11px;">
+            <div style="width:6px;height:6px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">OVER THE FIRE</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#7d5228,transparent);"></div>
+          </div>
+
+          <div style="position:relative;background:linear-gradient(160deg,#4a3a27,#34271c);border:1px solid #6b4a2c;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 20px rgba(237,162,60,.1);padding:11px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#eda23c;box-shadow:0 0 10px rgba(237,162,60,.7);"></div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="position:relative;width:44px;height:44px;flex-shrink:0;background:linear-gradient(150deg,#573f26,#38291a);border:1px solid #83572d;display:flex;align-items:center;justify-content:center;color:#a8d8cf;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-fish"></use></svg>
+                <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:16px;height:8px;background:radial-gradient(ellipse at 50% 100%,rgba(255,140,60,.85),transparent 70%);animation:heat 1.6s ease-in-out infinite;"></div>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Trout</div>
+                <div style="font-size:12.5px;color:#b6a583;margin-top:1px;">+8 xp &middot; 14 raw in the satchel</div>
+              </div>
+              <button type="button" style="flex-shrink:0;border:1px solid #7d4a22;background:linear-gradient(180deg,#c26a36,#7d4a1e);color:#ffe8d8;font-weight:700;font-size:12px;letter-spacing:.1em;padding:10px 15px;text-transform:uppercase;cursor:pointer;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">Stop</button>
+            </div>
+            <div style="margin-top:11px;position:relative;height:10px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+              <div style="position:absolute;top:1px;bottom:1px;left:1px;width:72%;background:linear-gradient(180deg,#ffd0a4,#eda23c 45%,#a03d10);box-shadow:0 0 14px rgba(237,162,60,.6);"></div>
+              <div style="position:absolute;top:1px;bottom:1px;left:1px;width:72%;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.22) 0 3px,transparent 3px 9px);"></div>
+              <div style="position:absolute;top:1px;bottom:1px;left:calc(72% - 2px);width:3px;background:#fff2e0;box-shadow:0 0 12px #ffd6a0;"></div>
+            </div>
+          </div>
+
+          <div style="position:relative;margin-top:9px;background:linear-gradient(160deg,#4a3a27,#34271c);border:1px solid #6b4a2c;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:11px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#7a4a2e;"></div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:44px;height:44px;flex-shrink:0;background:linear-gradient(150deg,#573f26,#38291a);border:1px solid #83572d;display:flex;align-items:center;justify-content:center;color:#a8d8cf;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-fish"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Minnow</div>
+                <div style="font-size:12.5px;color:#b6a583;margin-top:1px;">+3 xp &middot; none in the satchel</div>
+              </div>
+              <button type="button" disabled style="flex-shrink:0;border:1px solid #60492c;background:#332a1f;color:#7b6c4c;font-weight:700;font-size:12px;letter-spacing:.1em;padding:10px 15px;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">Cook</button>
+            </div>
+          </div>
+
+          <div style="position:relative;margin-top:9px;background:linear-gradient(160deg,#373224,#2f291f);border:1px solid #4b462e;padding:11px;opacity:.5;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:44px;height:44px;flex-shrink:0;border:1px dashed #72593c;display:flex;align-items:center;justify-content:center;color:#7b6c4c;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-lock"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#bfaf8c;">Bass</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a69573;margin-top:2px;">REQUIRES COOKING 30</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:9px;margin:18px 0 11px;">
+            <div style="width:6px;height:6px;background:#c6a3d8;transform:rotate(45deg);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">THE EMBERFORGE</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#634a43,transparent);"></div>
+          </div>
+
+          <div style="position:relative;background:linear-gradient(160deg,#453829,#342a20);border:1px solid #634a43;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 22px rgba(195,154,232,.08);padding:11px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#c6a3d8;box-shadow:0 0 10px rgba(195,154,232,.6);"></div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:44px;height:44px;flex-shrink:0;background:linear-gradient(150deg,#4c3c38,#372a25);border:1px solid #705765;display:flex;align-items:center;justify-content:center;color:#e0cbe8;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bar"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Mythril Bar</div>
+                <div style="font-size:12.5px;color:#b6a583;margin-top:1px;">+58 xp &middot; 12 ore ready</div>
+              </div>
+              <button type="button" style="flex-shrink:0;border:1px solid #7f6690;background:linear-gradient(180deg,#ad8bc6,#7f6690);color:#f4ecff;font-weight:700;font-size:12px;letter-spacing:.1em;padding:10px 15px;text-transform:uppercase;box-shadow:inset 0 1px 0 rgba(240,220,255,.35),0 0 16px rgba(169,127,208,.28);cursor:pointer;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">Smelt</button>
+            </div>
+          </div>
+
+          <div style="position:relative;margin-top:9px;background:linear-gradient(160deg,#453829,#342a20);border:1px solid #634a43;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:11px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#c6a3d8;box-shadow:0 0 10px rgba(195,154,232,.6);"></div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:44px;height:44px;flex-shrink:0;background:linear-gradient(150deg,#4c3c38,#372a25);border:1px solid #705765;display:flex;align-items:center;justify-content:center;color:#e0cbe8;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-sword"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Mythril Blade</div>
+                <div style="font-size:12px;color:#b6a583;margin-top:2px;">+36 ATK &middot; 5 Mythril Bars &middot; <span style="font-family:'JetBrains Mono',monospace;color:#ffc46b;">800g</span></div>
+              </div>
+              <button type="button" style="flex-shrink:0;border:1px solid #7f6690;background:linear-gradient(180deg,#ad8bc6,#7f6690);color:#f4ecff;font-weight:700;font-size:12px;letter-spacing:.1em;padding:10px 15px;text-transform:uppercase;box-shadow:inset 0 1px 0 rgba(240,220,255,.35),0 0 16px rgba(169,127,208,.28);cursor:pointer;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">Forge</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;background:linear-gradient(180deg,#423527,#302620);border-top:1px solid #6b5436;box-shadow:0 -2px 10px rgba(0,0,0,.7);padding:6px 2px 8px;flex-shrink:0;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-house"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Town</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-map"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Travel</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#ffd6a0;">
+            <div style="position:absolute;top:0;left:24%;right:24%;height:2px;background:#eda23c;box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Cook</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-stall"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Shop</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-scroll"></use></svg>
+            <div style="position:absolute;top:3px;right:23%;width:7px;height:7px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 7px rgba(237,162,60,.9);"></div>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Quests</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bag"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Bag</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SHOP ================= -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#a69573;margin-bottom:9px;">06 &mdash; THE STALL</div>
+      <div style="width:400px;height:830px;display:flex;flex-direction:column;overflow:hidden;background:#332920;border:1px solid #5e4b2d;box-shadow:0 20px 50px rgba(0,0,0,.7);">
+        <div style="position:relative;background:linear-gradient(180deg,#4c3d2a,#372c20 60%,#2e251b);border-bottom:1px solid #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 10px rgba(0,0,0,.7);flex-shrink:0;">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#eda23c,transparent);opacity:.5;"></div>
+          <div style="padding:11px 13px 10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;cursor:pointer;">
+                <div style="width:36px;height:36px;flex-shrink:0;background:linear-gradient(145deg,#4f402d,#3d3123);border:1px solid #7a6339;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 12px rgba(237,162,60,.14);clip-path:polygon(22% 0,78% 0,100% 22%,100% 78%,78% 100%,22% 100%,0 78%,0 22%);display:flex;align-items:center;justify-content:center;color:#ffc78f;">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hero"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15.5px;letter-spacing:.03em;color:#f0ebe0;line-height:1.1;text-shadow:0 0 14px rgba(255,140,60,.22);">Adventurer</div>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#a69573" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9,5 L17,12 L9,19"></path></svg>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                    <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;color:#2e251b;background:#cbb28a;padding:1px 5px;">CB 12</div>
+                    <div style="font-size:10.5px;letter-spacing:.06em;color:#a69573;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Corven's Stall</div>
+                  </div>
+                </div>
+              </div>
+              <div style="flex-shrink:0;text-align:right;padding-left:10px;border-left:1px solid #60492c;display:flex;align-items:center;gap:6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffc46b" stroke-width="1.8"><use href="#g-coin"></use></svg>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:#a69573;text-align:left;">GOLD</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:#ffc46b;line-height:1.15;text-shadow:0 0 10px rgba(255,170,60,.3);">1,284</div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:11px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">HP</div>
+              <div style="flex:1;position:relative;height:15px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background:linear-gradient(180deg,#ff9b6b,#d47340 40%,#94512c);box-shadow:0 0 12px rgba(212,115,64,.55);"></div>
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background-image:repeating-linear-gradient(115deg,rgba(255,220,180,.16) 0 3px,transparent 3px 8px);"></div>
+                <div style="position:absolute;top:1px;left:1px;height:3px;width:64%;background:linear-gradient(180deg,rgba(255,225,200,.5),transparent);"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;color:#fff;letter-spacing:.06em;text-shadow:0 1px 2px rgba(0,0,0,.9);">43 / 68</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">XP</div>
+              <div style="flex:1;position:relative;height:6px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:38%;background:linear-gradient(180deg,#ffd28a,#e2952c);box-shadow:0 0 9px rgba(255,180,70,.5);"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0 6px 4px;">
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+          </div>
+        </div>
+        <div style="flex:1;overflow:hidden;background:radial-gradient(ellipse 130% 45% at 50% 0%,#1c1d19,#332920 70%),#332920;padding:14px 13px;">
+
+          <div style="position:relative;background:linear-gradient(160deg,#4c3c25,#352a1d);border:1px solid #83662f;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 22px rgba(255,180,80,.09);padding:13px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));">
+            <div style="position:absolute;left:0;top:12px;bottom:12px;width:2px;background:#ffc46b;box-shadow:0 0 11px rgba(255,196,107,.6);"></div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="color:#ffc46b;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-stall"></use></svg></div>
+              <div>
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:#f0ebe0;">Corven's Stall</div>
+                <div style="font-size:12.5px;color:#c6b797;margin-top:3px;">Steel on the left, coin on the right. No credit.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;margin-top:14px;border:1px solid #72593c;background:#382d22;">
+            <div style="flex:1;padding:10px;text-align:center;background:linear-gradient(180deg,#ffd28a,#d09a2c);color:#241c04;font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;">Buy Gear</div>
+            <div style="flex:1;padding:10px;text-align:center;color:#b6a583;font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;">Sell Goods</div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:9px;margin:16px 0 11px;">
+            <div style="width:6px;height:6px;background:#ffc46b;transform:rotate(45deg);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">WEAPONS</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#83662f,transparent);"></div>
+          </div>
+
+          <div style="position:relative;background:linear-gradient(160deg,#4c3c25,#352a1d);border:1px solid #83662f;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 20px rgba(255,180,80,.1);padding:11px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#ffc46b;box-shadow:0 0 10px rgba(255,196,107,.6);"></div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:44px;height:44px;flex-shrink:0;background:linear-gradient(150deg,#503f26,#37291a);border:1px solid #a58236;display:flex;align-items:center;justify-content:center;color:#ffc46b;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-sword"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Steel Sword</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:8.5px;letter-spacing:.1em;color:#332920;background:#cbb28a;padding:1px 5px;">HELD</div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#ffc46b;margin-top:3px;">+14 ATK</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0;">
+                <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;color:#a69573;">&mdash;</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:relative;margin-top:9px;background:linear-gradient(160deg,#4c3c25,#352a1d);border:1px solid #83662f;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:11px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#ffc46b;box-shadow:0 0 10px rgba(255,196,107,.6);"></div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:44px;height:44px;flex-shrink:0;background:linear-gradient(150deg,#503f26,#37291a);border:1px solid #a58236;display:flex;align-items:center;justify-content:center;color:#ffc46b;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-shield"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#e8e2d6;">Iron Armour</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8d8cf;margin-top:3px;">+6 DEF</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0;">
+                <div style="display:flex;align-items:center;gap:4px;justify-content:flex-end;color:#ffc46b;">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#g-coin"></use></svg>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;">280</div>
+                </div>
+                <button type="button" style="margin-top:6px;border:1px solid #b58a28;background:linear-gradient(180deg,#ffd28a,#d09a2c);color:#241c04;font-weight:700;font-size:11.5px;letter-spacing:.1em;padding:8px 14px;text-transform:uppercase;box-shadow:inset 0 1px 0 rgba(255,245,210,.6),0 0 14px rgba(255,180,80,.25);cursor:pointer;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">Buy</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="position:relative;margin-top:9px;background:linear-gradient(160deg,#373224,#2f291f);border:1px solid #4b462e;padding:11px;opacity:.5;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:44px;height:44px;flex-shrink:0;border:1px dashed #72593c;display:flex;align-items:center;justify-content:center;color:#7b6c4c;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-lock"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#bfaf8c;">Dragonscale Armour</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a69573;margin-top:2px;">REQUIRES COMBAT 45</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:9px;margin:18px 0 11px;">
+            <div style="width:6px;height:6px;background:#cbb28a;transform:rotate(45deg);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">THE LEDGER</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#72593c,transparent);"></div>
+          </div>
+
+          <div style="background:#382d22;border:1px solid #5e4b2d;box-shadow:inset 0 2px 8px rgba(0,0,0,.8);">
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 11px;border-bottom:1px solid #403322;">
+              <div style="color:#cfeaa6;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-log"></use></svg></div>
+              <div style="flex:1;font-size:13px;color:#ede3cd;">Willow Log <span style="font-family:'JetBrains Mono',monospace;color:#a69573;">&times;42</span></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#ffc46b;">420g</div>
+              <button type="button" style="border:1px solid #7a6339;background:#403322;color:#ede3cd;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;letter-spacing:.1em;padding:5px 9px;cursor:pointer;">SELL ALL</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 11px;">
+              <div style="color:#e8cd8a;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-ore"></use></svg></div>
+              <div style="flex:1;font-size:13px;color:#ede3cd;">Silver Ore <span style="font-family:'JetBrains Mono',monospace;color:#a69573;">&times;18</span></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#ffc46b;">270g</div>
+              <button type="button" style="border:1px solid #7a6339;background:#403322;color:#ede3cd;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;letter-spacing:.1em;padding:5px 9px;cursor:pointer;">SELL ALL</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;background:linear-gradient(180deg,#423527,#302620);border-top:1px solid #6b5436;box-shadow:0 -2px 10px rgba(0,0,0,.7);padding:6px 2px 8px;flex-shrink:0;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-house"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Town</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-map"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Travel</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Cook</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#ffd6a0;">
+            <div style="position:absolute;top:0;left:24%;right:24%;height:2px;background:#eda23c;box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-stall"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Shop</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-scroll"></use></svg>
+            <div style="position:absolute;top:3px;right:23%;width:7px;height:7px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 7px rgba(237,162,60,.9);"></div>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Quests</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bag"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Bag</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= QUESTS ================= -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#a69573;margin-bottom:9px;">07 &mdash; QUEST BOARD</div>
+      <div style="width:400px;height:830px;display:flex;flex-direction:column;overflow:hidden;background:#332920;border:1px solid #5e4b2d;box-shadow:0 20px 50px rgba(0,0,0,.7);">
+        <div style="position:relative;background:linear-gradient(180deg,#4c3d2a,#372c20 60%,#2e251b);border-bottom:1px solid #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 10px rgba(0,0,0,.7);flex-shrink:0;">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#eda23c,transparent);opacity:.5;"></div>
+          <div style="padding:11px 13px 10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;cursor:pointer;">
+                <div style="width:36px;height:36px;flex-shrink:0;background:linear-gradient(145deg,#4f402d,#3d3123);border:1px solid #7a6339;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 12px rgba(237,162,60,.14);clip-path:polygon(22% 0,78% 0,100% 22%,100% 78%,78% 100%,22% 100%,0 78%,0 22%);display:flex;align-items:center;justify-content:center;color:#ffc78f;">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hero"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15.5px;letter-spacing:.03em;color:#f0ebe0;line-height:1.1;text-shadow:0 0 14px rgba(255,140,60,.22);">Adventurer</div>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#a69573" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9,5 L17,12 L9,19"></path></svg>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                    <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;color:#2e251b;background:#cbb28a;padding:1px 5px;">CB 12</div>
+                    <div style="font-size:10.5px;letter-spacing:.06em;color:#a69573;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Quest Board</div>
+                  </div>
+                </div>
+              </div>
+              <div style="flex-shrink:0;text-align:right;padding-left:10px;border-left:1px solid #60492c;display:flex;align-items:center;gap:6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffc46b" stroke-width="1.8"><use href="#g-coin"></use></svg>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:#a69573;text-align:left;">GOLD</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:#ffc46b;line-height:1.15;text-shadow:0 0 10px rgba(255,170,60,.3);">1,284</div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:11px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">HP</div>
+              <div style="flex:1;position:relative;height:15px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background:linear-gradient(180deg,#ff9b6b,#d47340 40%,#94512c);box-shadow:0 0 12px rgba(212,115,64,.55);"></div>
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background-image:repeating-linear-gradient(115deg,rgba(255,220,180,.16) 0 3px,transparent 3px 8px);"></div>
+                <div style="position:absolute;top:1px;left:1px;height:3px;width:64%;background:linear-gradient(180deg,rgba(255,225,200,.5),transparent);"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;color:#fff;letter-spacing:.06em;text-shadow:0 1px 2px rgba(0,0,0,.9);">43 / 68</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">XP</div>
+              <div style="flex:1;position:relative;height:6px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:38%;background:linear-gradient(180deg,#ffd28a,#e2952c);box-shadow:0 0 9px rgba(255,180,70,.5);"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0 6px 4px;">
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+          </div>
+        </div>
+        <div style="flex:1;overflow:hidden;background:radial-gradient(ellipse 130% 45% at 50% 0%,#3d3123,#332920 70%),#332920;padding:14px 13px;">
+
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
+            <div style="width:6px;height:6px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">THE BOARD &mdash; 3 OF 5 SETTLED</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#72593c,transparent);"></div>
+          </div>
+
+          <!-- ready to turn in -->
+          <div style="position:relative;background:linear-gradient(160deg,#503f24,#38291a);border:1px solid #94702d;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 26px rgba(255,180,80,.14);padding:12px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));">
+            <div style="position:absolute;left:0;top:12px;bottom:12px;width:3px;background:#ffc46b;box-shadow:0 0 14px rgba(255,196,107,.8);"></div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:#f0ebe0;line-height:1.25;">Watch on the Ridge</div>
+              <div style="flex-shrink:0;display:flex;align-items:center;gap:5px;background:linear-gradient(180deg,#ffd28a,#d09a2c);color:#241c04;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;padding:3px 7px;clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px);">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><use href="#g-check"></use></svg>
+                READY
+              </div>
+            </div>
+            <div style="font-size:13.5px;line-height:1.6;color:#c6b797;margin-top:8px;text-wrap:pretty;">Bandits have seized the old watchtower and are raiding the trade road. Drive them out.</div>
+            <div style="margin-top:11px;background:#302620;border:1px solid #725729;padding:9px 10px;">
+              <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#ede3cd;">
+                <span>DEFEAT 8 BANDITS</span><span style="color:#ffc46b;font-weight:700;">8 / 8</span>
+              </div>
+              <div style="display:flex;gap:3px;margin-top:7px;">
+                <div style="flex:1;height:5px;background:#ffc46b;box-shadow:0 0 6px rgba(255,196,107,.6);"></div><div style="flex:1;height:5px;background:#ffc46b;box-shadow:0 0 6px rgba(255,196,107,.6);"></div><div style="flex:1;height:5px;background:#ffc46b;box-shadow:0 0 6px rgba(255,196,107,.6);"></div><div style="flex:1;height:5px;background:#ffc46b;box-shadow:0 0 6px rgba(255,196,107,.6);"></div><div style="flex:1;height:5px;background:#ffc46b;box-shadow:0 0 6px rgba(255,196,107,.6);"></div><div style="flex:1;height:5px;background:#ffc46b;box-shadow:0 0 6px rgba(255,196,107,.6);"></div><div style="flex:1;height:5px;background:#ffc46b;box-shadow:0 0 6px rgba(255,196,107,.6);"></div><div style="flex:1;height:5px;background:#ffc46b;box-shadow:0 0 6px rgba(255,196,107,.6);"></div>
+              </div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#b6a583;margin-top:9px;letter-spacing:.04em;">REWARD &mdash; 340 GOLD &middot; 260 COMBAT XP &middot; NEW LOCATION</div>
+            <button type="button" style="width:100%;margin-top:11px;border:1px solid #b58a28;background:linear-gradient(180deg,#ffd28a,#d09a2c);color:#241c04;font-weight:700;font-size:13px;letter-spacing:.13em;text-transform:uppercase;padding:12px;box-shadow:inset 0 1px 0 rgba(255,245,210,.6),0 0 20px rgba(255,180,80,.3);cursor:pointer;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">Claim Reward</button>
+          </div>
+
+          <!-- active -->
+          <div style="position:relative;margin-top:10px;background:linear-gradient(160deg,#453828,#332a1f);border:1px solid #684f30;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:12px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));">
+            <div style="position:absolute;left:0;top:12px;bottom:12px;width:2px;background:#cbb28a;"></div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+              <div style="font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:#f0ebe0;line-height:1.25;">Into the Deep</div>
+              <div style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;color:#332920;background:#cbb28a;padding:3px 7px;clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px);">IN HAND</div>
+            </div>
+            <div style="font-size:13.5px;line-height:1.6;color:#c6b797;margin-top:8px;text-wrap:pretty;">Something ancient guards the depths of the Sunken Crypt. Face it, if you dare.</div>
+            <div style="margin-top:11px;background:#302620;border:1px solid #5e4b2d;padding:9px 10px;">
+              <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#ede3cd;">
+                <span>DEFEAT THE CRYPT WARDEN</span><span style="color:#cbb28a;font-weight:700;">0 / 1</span>
+              </div>
+              <div style="display:flex;gap:3px;margin-top:7px;">
+                <div style="flex:1;height:5px;background:#5e4b2d;"></div>
+              </div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#b6a583;margin-top:9px;letter-spacing:.04em;">REWARD &mdash; 800 GOLD &middot; 600 COMBAT XP &middot; WARDEN'S BLADE</div>
+          </div>
+
+          <!-- complete -->
+          <div style="position:relative;margin-top:10px;background:#3d3126;border:1px solid #5e4b2d;padding:11px 12px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#4d7a33;"></div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="color:#8fbb5a;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><use href="#g-check"></use></svg></div>
+              <div style="flex:1;font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#b6a583;text-decoration:line-through;text-decoration-color:#6c5b3b;">The Vigil</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:#a69573;">SETTLED</div>
+            </div>
+          </div>
+
+          <!-- locked -->
+          <div style="position:relative;margin-top:10px;background:#382d22;border:1px dashed #5e4b2d;padding:12px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="color:#7b6c4c;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-lock"></use></svg></div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#8c7c58;">Sealed Orders</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7b6c4c;margin-top:3px;">FINISH &ldquo;INTO THE DEEP&rdquo; FIRST</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;background:linear-gradient(180deg,#423527,#302620);border-top:1px solid #6b5436;box-shadow:0 -2px 10px rgba(0,0,0,.7);padding:6px 2px 8px;flex-shrink:0;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-house"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Town</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-map"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Travel</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Cook</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-stall"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Shop</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#ffd6a0;">
+            <div style="position:absolute;top:0;left:24%;right:24%;height:2px;background:#eda23c;box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-scroll"></use></svg>
+            <div style="position:absolute;top:3px;right:23%;width:7px;height:7px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 7px rgba(237,162,60,.9);"></div>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Quests</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bag"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Bag</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= BAG ================= -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#a69573;margin-bottom:9px;">08 &mdash; SATCHEL</div>
+      <div style="width:400px;height:830px;display:flex;flex-direction:column;overflow:hidden;background:#332920;border:1px solid #5e4b2d;box-shadow:0 20px 50px rgba(0,0,0,.7);">
+        <div style="position:relative;background:linear-gradient(180deg,#4c3d2a,#372c20 60%,#2e251b);border-bottom:1px solid #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 10px rgba(0,0,0,.7);flex-shrink:0;">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#eda23c,transparent);opacity:.5;"></div>
+          <div style="padding:11px 13px 10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div style="display:flex;align-items:center;gap:9px;min-width:0;cursor:pointer;">
+                <div style="width:36px;height:36px;flex-shrink:0;background:linear-gradient(145deg,#4f402d,#3d3123);border:1px solid #7a6339;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 12px rgba(237,162,60,.14);clip-path:polygon(22% 0,78% 0,100% 22%,100% 78%,78% 100%,22% 100%,0 78%,0 22%);display:flex;align-items:center;justify-content:center;color:#ffc78f;">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-hero"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15.5px;letter-spacing:.03em;color:#f0ebe0;line-height:1.1;text-shadow:0 0 14px rgba(255,140,60,.22);">Adventurer</div>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#a69573" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9,5 L17,12 L9,19"></path></svg>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                    <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.1em;color:#2e251b;background:#cbb28a;padding:1px 5px;">CB 12</div>
+                    <div style="font-size:10.5px;letter-spacing:.06em;color:#a69573;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Satchel</div>
+                  </div>
+                </div>
+              </div>
+              <div style="flex-shrink:0;text-align:right;padding-left:10px;border-left:1px solid #60492c;display:flex;align-items:center;gap:6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffc46b" stroke-width="1.8"><use href="#g-coin"></use></svg>
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:#a69573;text-align:left;">GOLD</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:#ffc46b;line-height:1.15;text-shadow:0 0 10px rgba(255,170,60,.3);">1,284</div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:11px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">HP</div>
+              <div style="flex:1;position:relative;height:15px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background:linear-gradient(180deg,#ff9b6b,#d47340 40%,#94512c);box-shadow:0 0 12px rgba(212,115,64,.55);"></div>
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:64%;background-image:repeating-linear-gradient(115deg,rgba(255,220,180,.16) 0 3px,transparent 3px 8px);"></div>
+                <div style="position:absolute;top:1px;left:1px;height:3px;width:64%;background:linear-gradient(180deg,rgba(255,225,200,.5),transparent);"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;color:#fff;letter-spacing:.06em;text-shadow:0 1px 2px rgba(0,0,0,.9);">43 / 68</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;letter-spacing:.12em;color:#bfaf8c;width:19px;">XP</div>
+              <div style="flex:1;position:relative;height:6px;background:#241c13;border:1px solid #6b5436;box-shadow:inset 0 2px 4px rgba(0,0,0,.9);">
+                <div style="position:absolute;top:1px;bottom:1px;left:1px;width:38%;background:linear-gradient(180deg,#ffd28a,#e2952c);box-shadow:0 0 9px rgba(255,180,70,.5);"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0 6px 4px;">
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+            <div style="width:4px;height:4px;border-radius:50%;background:#3d464d;box-shadow:inset 0 1px 1px rgba(255,255,255,.25);"></div>
+          </div>
+        </div>
+        <div style="flex:1;overflow:hidden;background:radial-gradient(ellipse 130% 45% at 50% 0%,#3d3123,#332920 70%),#332920;padding:14px 13px;">
+
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
+            <div style="width:6px;height:6px;background:#cbb28a;transform:rotate(45deg);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">SATCHEL</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#72593c,transparent);"></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#a69573;">6 KINDS</div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+            <div style="position:relative;aspect-ratio:1;background:linear-gradient(160deg,#3d402a,#313524);border:1px solid #615833;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:#cfeaa6;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+              <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-log"></use></svg>
+              <div style="position:absolute;bottom:2px;right:4px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10.5px;color:#f0ebe0;text-shadow:0 1px 2px #000;">42</div>
+            </div>
+            <div style="position:relative;aspect-ratio:1;background:linear-gradient(160deg,#3e3c28,#332c1f);border:1px solid #7a652f;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:#e8cd8a;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+              <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-ore"></use></svg>
+              <div style="position:absolute;bottom:2px;right:4px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10.5px;color:#f0ebe0;text-shadow:0 1px 2px #000;">18</div>
+            </div>
+            <div style="position:relative;aspect-ratio:1;background:linear-gradient(160deg,#3b3d2c,#302c20);border:1px solid #4a716a;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:#a8d8cf;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+              <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-fish"></use></svg>
+              <div style="position:absolute;bottom:2px;right:4px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10.5px;color:#f0ebe0;text-shadow:0 1px 2px #000;">14</div>
+            </div>
+            <div style="position:relative;aspect-ratio:1;background:linear-gradient(160deg,#4a3a27,#34271c);border:1px solid #83572d;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 16px rgba(237,162,60,.14);display:flex;align-items:center;justify-content:center;color:#ffcd96;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+              <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-meal"></use></svg>
+              <div style="position:absolute;bottom:2px;right:4px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10.5px;color:#f0ebe0;text-shadow:0 1px 2px #000;">6</div>
+              <div style="position:absolute;top:3px;left:4px;width:5px;height:5px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 6px rgba(237,162,60,.9);"></div>
+            </div>
+            <div style="position:relative;aspect-ratio:1;background:linear-gradient(160deg,#453829,#342a20);border:1px solid #705765;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:#e0cbe8;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+              <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bar"></use></svg>
+              <div style="position:absolute;bottom:2px;right:4px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10.5px;color:#f0ebe0;text-shadow:0 1px 2px #000;">9</div>
+            </div>
+            <div style="position:relative;aspect-ratio:1;background:linear-gradient(160deg,#3b3d2c,#302c20);border:1px solid #4a716a;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:#a8d8cf;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+              <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><use href="#g-fish"></use></svg>
+              <div style="position:absolute;bottom:2px;right:4px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10.5px;color:#f0ebe0;text-shadow:0 1px 2px #000;">3</div>
+            </div>
+            <div style="aspect-ratio:1;background:#382d22;border:1px dashed #5e4b2d;"></div>
+            <div style="aspect-ratio:1;background:#382d22;border:1px dashed #5e4b2d;"></div>
+            <div style="aspect-ratio:1;background:#382d22;border:1px dashed #5e4b2d;"></div>
+            <div style="aspect-ratio:1;background:#382d22;border:1px dashed #5e4b2d;"></div>
+            <div style="aspect-ratio:1;background:#382d22;border:1px dashed #5e4b2d;"></div>
+            <div style="aspect-ratio:1;background:#382d22;border:1px dashed #5e4b2d;"></div>
+          </div>
+
+          <div style="position:relative;margin-top:12px;background:linear-gradient(160deg,#4a3a27,#34271c);border:1px solid #83572d;box-shadow:0 0 20px rgba(237,162,60,.1);padding:11px;clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));">
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:2px;background:#eda23c;box-shadow:0 0 10px rgba(237,162,60,.7);"></div>
+            <div style="display:flex;align-items:center;gap:11px;">
+              <div style="width:42px;height:42px;flex-shrink:0;background:linear-gradient(150deg,#573f26,#38291a);border:1px solid #83572d;display:flex;align-items:center;justify-content:center;color:#ffcd96;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-meal"></use></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#e8e2d6;">Cooked Trout</div>
+                <div style="font-size:12px;color:#b6a583;margin-top:2px;">6 in hand &middot; mends 14 HP</div>
+              </div>
+              <button type="button" style="flex-shrink:0;border:1px solid #4d7a33;background:linear-gradient(180deg,#7cad50,#4a7229);color:#f2f8ea;font-weight:700;font-size:11.5px;letter-spacing:.1em;padding:9px 15px;text-transform:uppercase;box-shadow:inset 0 1px 0 rgba(220,255,190,.3);cursor:pointer;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));">Eat</button>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:9px;margin:18px 0 11px;">
+            <div style="width:6px;height:6px;background:#ffc46b;transform:rotate(45deg);"></div>
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:.22em;color:#d0c0a1;">WORN</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,#83662f,transparent);"></div>
+          </div>
+
+          <div style="display:flex;gap:9px;">
+            <div style="flex:1;position:relative;background:linear-gradient(160deg,#4c3c25,#352a1d);border:1px solid #83662f;padding:11px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="display:flex;align-items:center;gap:9px;">
+                <div style="width:36px;height:36px;flex-shrink:0;border:1px solid #a58236;display:flex;align-items:center;justify-content:center;color:#ffc46b;">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-sword"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#ad975f;">WEAPON</div>
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13px;color:#f0ebe0;line-height:1.2;">Steel Sword</div>
+                </div>
+              </div>
+            </div>
+            <div style="flex:1;position:relative;background:#3d3126;border:1px dashed #72593c;padding:11px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));">
+              <div style="display:flex;align-items:center;gap:9px;">
+                <div style="width:36px;height:36px;flex-shrink:0;border:1px dashed #72593c;display:flex;align-items:center;justify-content:center;color:#63563a;">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#g-shield"></use></svg>
+                </div>
+                <div style="min-width:0;">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:#8c7c58;">ARMOUR</div>
+                  <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13px;color:#8c7c58;line-height:1.2;">Empty</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;display:flex;justify-content:center;">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:#3a3a20ee;border:1px solid #d09a2c;color:#ffd28a;font-family:'Cinzel',serif;font-weight:700;font-size:12.5px;padding:9px 16px;box-shadow:0 4px 18px rgba(0,0,0,.6),0 0 22px rgba(255,180,80,.15);clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));">
+              <div style="width:5px;height:5px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 7px rgba(237,162,60,.9);"></div>
+              Smithing level up &mdash; now 67
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;background:linear-gradient(180deg,#423527,#302620);border-top:1px solid #6b5436;box-shadow:0 -2px 10px rgba(0,0,0,.7);padding:6px 2px 8px;flex-shrink:0;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-house"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Town</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-map"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Travel</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-flame"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Cook</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-stall"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Shop</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#a69573;">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-scroll"></use></svg>
+            <div style="position:absolute;top:3px;right:23%;width:7px;height:7px;background:#eda23c;transform:rotate(45deg);box-shadow:0 0 7px rgba(237,162,60,.9);"></div>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Quests</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;color:#ffd6a0;">
+            <div style="position:absolute;top:0;left:24%;right:24%;height:2px;background:#eda23c;box-shadow:0 0 8px rgba(237,162,60,.8);"></div>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#g-bag"></use></svg>
+            <div style="font-weight:700;font-size:9px;letter-spacing:.07em;text-transform:uppercase;">Bag</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#191712;}
+  a{color:#7a2e2b;} a:hover{color:#c4551f;}
+  @keyframes emberpulse{0%,100%{opacity:.55;} 50%{opacity:1;}}
+  @keyframes fibers{to{background-position:0 0;}}
+</style>
+</helmet>
+
+<div style="width:400px;margin:0 auto;font-family:'EB Garamond',Georgia,serif;background:#191712;padding:0 0 30px;">
+
+  <div style="padding:18px 16px 14px;background:#191712;">
+    <div style="font-family:'Cinzel',serif;font-weight:900;font-size:11px;letter-spacing:.28em;color:#a8802c;">DIRECTION A</div>
+    <div style="font-family:'Cinzel',serif;font-weight:700;font-size:23px;color:#e8dfc8;margin-top:6px;">Illuminated Ledger</div>
+    <div style="font-size:14.5px;line-height:1.5;color:#8b7f68;margin-top:6px;text-wrap:pretty;">Aged paper and iron-gall ink. The world is a hand-kept book: ruled frames, wax seals, marginal notes. Only magic and fire are allowed to glow.</div>
+  </div>
+
+  <!-- ============ HUD ============ -->
+  <div style="position:relative;background:linear-gradient(178deg,#eae1ca,#dfd3b6);border-bottom:3px double #b5a483;box-shadow:inset 0 -14px 22px -14px rgba(70,54,30,.35);">
+    <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(94deg,rgba(120,96,56,.07) 0 1px,transparent 1px 4px),repeating-linear-gradient(2deg,rgba(120,96,56,.05) 0 1px,transparent 1px 6px);pointer-events:none;"></div>
+    <div style="position:relative;padding:12px 14px 11px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+        <div style="display:flex;align-items:center;gap:9px;min-width:0;">
+          <div style="width:34px;height:34px;flex-shrink:0;border-radius:50%;background:radial-gradient(circle at 34% 28%,#8e3a34,#5d1f1c);box-shadow:0 1px 0 #f2ead6,inset 0 -2px 4px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:900;font-size:14px;color:#e8cfa6;">T</div>
+          <div style="min-width:0;">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:16px;letter-spacing:.02em;color:#2b2317;line-height:1.1;">Adventurer</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#7a6b50;margin-top:3px;">Combat &mdash; XII</div>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;color:#8a7a5c;">PURSE</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:17px;color:#7d5c12;letter-spacing:-.01em;">1,284</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:11px;">
+        <div style="font-family:'Cinzel',serif;font-weight:700;font-size:9.5px;letter-spacing:.16em;color:#7a6b50;width:22px;">HP</div>
+        <div style="flex:1;position:relative;height:14px;border:1px solid #9b8a68;background:#cdbf9f;box-shadow:inset 0 1px 3px rgba(70,54,30,.35);">
+          <div style="position:absolute;inset:1px;width:64%;background:linear-gradient(180deg,#a83f38,#7a2622 62%,#8d322c);box-shadow:inset 0 1px 0 rgba(255,220,190,.35),inset 0 -3px 5px rgba(0,0,0,.3);"></div>
+          <div style="position:absolute;inset:1px;width:64%;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.09) 0 2px,transparent 2px 5px);"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9px;color:#f6ecd6;text-shadow:0 1px 1px rgba(40,12,10,.9);letter-spacing:.06em;">43 / 68</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:9px;padding-top:8px;border-top:1px solid rgba(120,96,56,.3);">
+        <div style="width:5px;height:5px;border-radius:50%;background:#b5a483;box-shadow:inset 0 1px 1px rgba(0,0,0,.4);"></div>
+        <div style="width:5px;height:5px;border-radius:50%;background:#b5a483;box-shadow:inset 0 1px 1px rgba(0,0,0,.4);"></div>
+        <div style="width:5px;height:5px;border-radius:50%;background:#b5a483;box-shadow:inset 0 1px 1px rgba(0,0,0,.4);"></div>
+        <div style="width:5px;height:5px;border-radius:50%;background:#b5a483;box-shadow:inset 0 1px 1px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CONTENT ============ -->
+  <div style="position:relative;background:linear-gradient(180deg,#e6dcc4,#e0d5ba 40%,#dbceb0);padding:16px 14px 20px;">
+    <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(91deg,rgba(120,96,56,.055) 0 1px,transparent 1px 5px);pointer-events:none;"></div>
+
+    <div style="position:relative;">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;">
+        <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11.5px;letter-spacing:.2em;color:#6b5c43;">YOUR SKILLS</div>
+        <div style="flex:1;height:0;border-top:1px solid #b8a682;border-bottom:1px solid rgba(255,255,255,.5);"></div>
+      </div>
+
+      <!-- skill card: woodcutting -->
+      <div style="position:relative;background:linear-gradient(180deg,#efe6cf,#e5dabe);border:1px solid #b09c76;box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 2px 5px rgba(60,44,22,.16);padding:12px;margin-bottom:9px;">
+        <div style="position:absolute;top:3px;left:3px;right:3px;bottom:3px;border:1px solid rgba(176,156,118,.5);pointer-events:none;"></div>
+        <div style="position:relative;display:flex;align-items:center;gap:13px;">
+          <div style="position:relative;width:52px;height:52px;flex-shrink:0;">
+            <svg width="52" height="52" viewBox="0 0 52 52" style="transform:rotate(-90deg);display:block;">
+              <circle cx="26" cy="26" r="22" fill="none" stroke="#c9b992" stroke-width="5"></circle>
+              <circle cx="26" cy="26" r="22" fill="none" stroke="#3f5a34" stroke-width="5" stroke-linecap="butt" stroke-dasharray="138.2" stroke-dashoffset="48"></circle>
+              <circle cx="26" cy="26" r="17.5" fill="none" stroke="rgba(120,96,56,.28)" stroke-width="1"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:19px;filter:sepia(.35) saturate(.75) contrast(1.05);">&#129683;</div>
+            <div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);background:radial-gradient(circle at 40% 30%,#4e6b3f,#2d4224);color:#eee6cd;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;padding:1px 6px;border-radius:9px;box-shadow:0 0 0 2px #e9dfc5,0 1px 3px rgba(0,0,0,.3);">31</div>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:#2b2317;">Woodcutting</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#7a6b50;margin-top:3px;">1,240 / 2,180 xp</div>
+          </div>
+          <div style="text-align:right;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;color:#8d7d5f;">65%</div>
+        </div>
+      </div>
+
+      <!-- skill card: smithing, high completion + ember -->
+      <div style="position:relative;background:linear-gradient(180deg,#efe6cf,#e5dabe);border:1px solid #b09c76;box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 2px 5px rgba(60,44,22,.16);padding:12px;margin-bottom:9px;">
+        <div style="position:absolute;top:3px;left:3px;right:3px;bottom:3px;border:1px solid rgba(176,156,118,.5);pointer-events:none;"></div>
+        <div style="position:relative;display:flex;align-items:center;gap:13px;">
+          <div style="position:relative;width:52px;height:52px;flex-shrink:0;">
+            <div style="position:absolute;inset:-6px;border-radius:50%;background:radial-gradient(circle,rgba(196,85,31,.4),rgba(196,85,31,0) 68%);animation:emberpulse 2.6s ease-in-out infinite;"></div>
+            <svg width="52" height="52" viewBox="0 0 52 52" style="transform:rotate(-90deg);display:block;position:relative;">
+              <circle cx="26" cy="26" r="22" fill="none" stroke="#c9b992" stroke-width="5"></circle>
+              <circle cx="26" cy="26" r="22" fill="none" stroke="#6b4a86" stroke-width="5" stroke-dasharray="138.2" stroke-dashoffset="12"></circle>
+              <circle cx="26" cy="26" r="17.5" fill="none" stroke="rgba(120,96,56,.28)" stroke-width="1"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:19px;filter:sepia(.3) saturate(.8);">&#9874;</div>
+            <div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);background:radial-gradient(circle at 40% 30%,#7b5a96,#4a3161);color:#f0e7d0;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:9.5px;padding:1px 6px;border-radius:9px;box-shadow:0 0 0 2px #e9dfc5,0 1px 3px rgba(0,0,0,.3);">67</div>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:#2b2317;">Smithing</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#7a6b50;margin-top:3px;">8,910 / 9,640 xp</div>
+          </div>
+          <div style="text-align:right;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;color:#8d5a2c;">91%</div>
+        </div>
+      </div>
+
+      <!-- gathering action card -->
+      <div style="display:flex;align-items:center;gap:9px;margin:18px 0 11px;">
+        <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11.5px;letter-spacing:.2em;color:#6b5c43;">BIRCHWOOD GROVE</div>
+        <div style="flex:1;height:0;border-top:1px solid #b8a682;border-bottom:1px solid rgba(255,255,255,.5);"></div>
+      </div>
+
+      <div style="position:relative;background:linear-gradient(180deg,#efe6cf,#e5dabe);border:1px solid #b09c76;border-left:4px solid #3f5a34;box-shadow:0 2px 5px rgba(60,44,22,.16);padding:12px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:44px;height:44px;flex-shrink:0;border:1px solid #ab9670;background:radial-gradient(circle at 34% 28%,#f4ecd7,#dccfb0);box-shadow:inset 0 1px 3px rgba(70,54,30,.2);display:flex;align-items:center;justify-content:center;font-size:20px;filter:sepia(.3) saturate(.8);">&#129736;</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14.5px;color:#2b2317;">Willow Tree</div>
+            <div style="font-size:13px;color:#7a6b50;margin-top:1px;">+22 xp &middot; yields Willow Log</div>
+          </div>
+          <button type="button" style="flex-shrink:0;border:1px solid #2d4224;background:linear-gradient(180deg,#557440,#35492a);color:#f1e9d2;font-family:'Cinzel',serif;font-weight:700;font-size:12px;letter-spacing:.08em;padding:9px 15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 2px 3px rgba(40,30,12,.3);cursor:pointer;" style-active="transform:translateY(1px);filter:brightness(.94);">STOP</button>
+        </div>
+        <div style="margin-top:11px;position:relative;height:11px;border:1px solid #9b8a68;background:#cdbf9f;box-shadow:inset 0 1px 3px rgba(70,54,30,.35);">
+          <div style="position:absolute;inset:1px;width:41%;background:linear-gradient(180deg,#6a8b4f,#3c5531 65%,#48633a);box-shadow:inset 0 1px 0 rgba(255,255,255,.28);"></div>
+        </div>
+      </div>
+
+      <!-- MAP -->
+      <div style="display:flex;align-items:center;gap:9px;margin:20px 0 11px;">
+        <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11.5px;letter-spacing:.2em;color:#6b5c43;">THE MAP OF THORNWAKE</div>
+        <div style="flex:1;height:0;border-top:1px solid #b8a682;border-bottom:1px solid rgba(255,255,255,.5);"></div>
+      </div>
+
+      <div style="border:1px solid #a89272;padding:5px;background:#d8c9a6;box-shadow:0 2px 6px rgba(60,44,22,.2);">
+        <div style="border:2px solid #b7a37c;padding:0;background:#e2d6b6;">
+          <svg viewBox="0 0 372 210" style="display:block;width:100%;height:auto;">
+            <defs>
+              <pattern id="aFor" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                <rect width="7" height="7" fill="#cfd6b0"></rect><path d="M0,0 L0,7" stroke="#6d8354" stroke-width="1.4"></path>
+              </pattern>
+              <pattern id="aWat" width="8" height="6" patternUnits="userSpaceOnUse">
+                <rect width="8" height="6" fill="#c8d3cf"></rect><path d="M0,3 q2,-2 4,0 q2,2 4,0" fill="none" stroke="#5e8390" stroke-width="1"></path>
+              </pattern>
+              <pattern id="aRock" width="8" height="8" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+                <rect width="8" height="8" fill="#ddceac"></rect><path d="M0,0 L0,8" stroke="#9b7f4d" stroke-width="1.3"></path>
+              </pattern>
+              <pattern id="aCorr" width="6" height="6" patternUnits="userSpaceOnUse">
+                <rect width="6" height="6" fill="#cdbcae"></rect><path d="M0,0 L6,6 M6,0 L0,6" stroke="#7c5560" stroke-width=".9"></path>
+              </pattern>
+            </defs>
+            <rect width="372" height="210" fill="#e5d9b9"></rect>
+            <path d="M4,120 C40,96 62,132 96,124 C130,116 138,150 128,182 C96,206 30,204 4,186 Z" fill="url(#aFor)" stroke="#6d8354" stroke-width="1.2"></path>
+            <path d="M242,110 C286,92 348,104 366,132 C368,168 340,200 296,202 C252,200 232,164 242,110 Z" fill="url(#aRock)" stroke="#9b7f4d" stroke-width="1.2"></path>
+            <path d="M4,20 C42,10 76,26 84,54 C90,84 52,100 20,92 C4,82 0,44 4,20 Z" fill="url(#aWat)" stroke="#5e8390" stroke-width="1.2"></path>
+            <path d="M154,8 C214,2 262,20 268,52 C272,82 226,96 186,90 C150,84 142,40 154,8 Z" fill="url(#aCorr)" stroke="#7c5560" stroke-width="1.2" stroke-dasharray="5 3"></path>
+
+            <path d="M186,180 C160,168 140,152 128,140" fill="none" stroke="#a8802c" stroke-width="2.6" stroke-linecap="round"></path>
+            <path d="M186,180 C232,170 258,158 282,144" fill="none" stroke="#a8802c" stroke-width="2.6" stroke-linecap="round"></path>
+            <path d="M186,180 C190,150 194,122 196,96" fill="none" stroke="#a8802c" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="1 0"></path>
+            <path d="M196,96 C198,72 202,54 210,44" fill="none" stroke="#8d7d5f" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 6"></path>
+            <path d="M128,140 C104,116 84,96 70,74" fill="none" stroke="#8d7d5f" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 6"></path>
+
+            <g>
+              <circle cx="186" cy="180" r="13" fill="#f2e8ce" stroke="#7d5c12" stroke-width="2"></circle>
+              <circle cx="186" cy="180" r="9" fill="none" stroke="#a8802c" stroke-width="1"></circle>
+              <text x="186" y="185" font-size="12" text-anchor="middle">&#127960;</text>
+              <text x="186" y="203" font-family="Cinzel,serif" font-size="9.5" font-weight="700" fill="#4a3c22" text-anchor="middle" style="paint-order:stroke;stroke:#f0e6cd;stroke-width:3;">Thornwake</text>
+            </g>
+            <g>
+              <circle cx="128" cy="140" r="11.5" fill="#eee3c6" stroke="#3f5a34" stroke-width="1.8"></circle>
+              <text x="128" y="145" font-size="11" text-anchor="middle">&#127795;</text>
+              <text x="128" y="162" font-family="Cinzel,serif" font-size="8.5" font-weight="700" fill="#3d4f30" text-anchor="middle" style="paint-order:stroke;stroke:#eadfc4;stroke-width:3;">Birchwood</text>
+            </g>
+            <g>
+              <circle cx="282" cy="144" r="11.5" fill="#eee3c6" stroke="#9b7f4d" stroke-width="1.8"></circle>
+              <text x="282" y="149" font-size="11" text-anchor="middle">&#9968;</text>
+              <text x="282" y="166" font-family="Cinzel,serif" font-size="8.5" font-weight="700" fill="#6b5426" text-anchor="middle" style="paint-order:stroke;stroke:#eadfc4;stroke-width:3;">Stonevein</text>
+            </g>
+            <g opacity=".62">
+              <circle cx="196" cy="96" r="11.5" fill="#ded1b0" stroke="#a19072" stroke-width="1.4" stroke-dasharray="3 3"></circle>
+              <text x="196" y="101" font-family="Cinzel,serif" font-size="11" font-weight="900" fill="#8b7a5c" text-anchor="middle">?</text>
+              <text x="196" y="118" font-family="Cinzel,serif" font-size="8.5" font-weight="700" fill="#8b7a5c" text-anchor="middle" style="paint-order:stroke;stroke:#e6dbbe;stroke-width:3;">???</text>
+            </g>
+            <g opacity=".62">
+              <circle cx="70" cy="74" r="11.5" fill="#ded1b0" stroke="#a19072" stroke-width="1.4" stroke-dasharray="3 3"></circle>
+              <text x="70" y="79" font-family="Cinzel,serif" font-size="11" font-weight="900" fill="#8b7a5c" text-anchor="middle">?</text>
+              <text x="70" y="96" font-family="Cinzel,serif" font-size="8.5" font-weight="700" fill="#8b7a5c" text-anchor="middle" style="paint-order:stroke;stroke:#e6dbbe;stroke-width:3;">???</text>
+            </g>
+
+            <g transform="translate(336,182)" opacity=".8">
+              <circle r="15" fill="none" stroke="#8d7d5f" stroke-width="1"></circle>
+              <path d="M0,-14 L3.5,0 L0,14 L-3.5,0 Z" fill="#7d5c12"></path>
+              <path d="M-14,0 L0,2.6 L14,0 L0,-2.6 Z" fill="#b8a682"></path>
+              <text x="0" y="-18" font-family="Cinzel,serif" font-size="7" font-weight="700" fill="#6b5c43" text-anchor="middle">N</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- QUEST CARD -->
+      <div style="display:flex;align-items:center;gap:9px;margin:20px 0 11px;">
+        <div style="font-family:'Cinzel',serif;font-weight:700;font-size:11.5px;letter-spacing:.2em;color:#6b5c43;">QUEST LOG</div>
+        <div style="flex:1;height:0;border-top:1px solid #b8a682;border-bottom:1px solid rgba(255,255,255,.5);"></div>
+      </div>
+
+      <div style="position:relative;background:linear-gradient(180deg,#f1e8d2,#e4d9bd);border:1px solid #b09c76;box-shadow:0 2px 6px rgba(60,44,22,.18);padding:14px 13px 13px;">
+        <div style="position:absolute;top:-1px;left:14px;right:14px;height:5px;background:linear-gradient(180deg,rgba(90,70,36,.18),transparent);"></div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+          <div style="font-family:'Cinzel',serif;font-weight:700;font-size:15.5px;color:#2b2317;line-height:1.25;">Watch on the Ridge</div>
+          <div style="flex-shrink:0;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#a8802c,#6d4f10);box-shadow:0 1px 3px rgba(0,0,0,.35),inset 0 -2px 3px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:900;font-size:9px;color:#f6e6bd;letter-spacing:.02em;">ACT</div>
+        </div>
+        <div style="font-size:14px;line-height:1.55;color:#5f5238;margin-top:8px;text-wrap:pretty;font-style:italic;">Bandits have seized the old watchtower and are raiding the trade road. Drive them out.</div>
+        <div style="margin-top:11px;padding:9px 10px;background:rgba(120,96,56,.09);border-left:2px solid #a8802c;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4a3f28;">Defeat 8 Bandits &mdash; 5/8</div>
+          <div style="margin-top:7px;display:flex;gap:3px;">
+            <div style="flex:1;height:5px;background:#a8802c;"></div><div style="flex:1;height:5px;background:#a8802c;"></div><div style="flex:1;height:5px;background:#a8802c;"></div><div style="flex:1;height:5px;background:#a8802c;"></div><div style="flex:1;height:5px;background:#a8802c;"></div><div style="flex:1;height:5px;background:#c6b48d;"></div><div style="flex:1;height:5px;background:#c6b48d;"></div><div style="flex:1;height:5px;background:#c6b48d;"></div>
+          </div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#7a6b50;margin-top:10px;letter-spacing:.02em;">REWARD &mdash; 340 gold, 260 combat xp, new location</div>
+        <button type="button" style="width:100%;margin-top:11px;border:1px solid #6d4f10;background:linear-gradient(180deg,#c39a34,#94711a);color:#241c04;font-family:'Cinzel',serif;font-weight:900;font-size:12.5px;letter-spacing:.1em;padding:11px;box-shadow:inset 0 1px 0 rgba(255,240,200,.5),0 2px 3px rgba(40,30,12,.3);cursor:pointer;" style-active="transform:translateY(1px);filter:brightness(.95);">IN PROGRESS</button>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <button type="button" style="flex:2;border:1px solid #5d1f1c;background:linear-gradient(180deg,#9e4038,#6f2320);color:#f6ead4;font-family:'Cinzel',serif;font-weight:700;font-size:12.5px;letter-spacing:.09em;padding:12px;box-shadow:inset 0 1px 0 rgba(255,210,190,.28),0 2px 3px rgba(40,20,12,.3);cursor:pointer;">ATTACK</button>
+        <button type="button" style="flex:1;border:1px solid #a89272;background:linear-gradient(180deg,#eee4cc,#ddd1b3);color:#3c3220;font-family:'Cinzel',serif;font-weight:700;font-size:12.5px;letter-spacing:.06em;padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.6);cursor:pointer;">Eat</button>
+        <button type="button" style="flex:1;border:1px solid #a89272;background:linear-gradient(180deg,#eee4cc,#ddd1b3);color:#3c3220;font-family:'Cinzel',serif;font-weight:700;font-size:12.5px;letter-spacing:.06em;padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.6);cursor:pointer;">Flee</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <div style="display:flex;background:linear-gradient(180deg,#241f16,#1a1610);border-top:3px double #6b5a3a;padding:7px 2px 9px;">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;">
+      <div style="font-size:17px;filter:sepia(.5) saturate(.5) brightness(1.3);">&#127960;</div>
+      <div style="font-family:'Cinzel',serif;font-weight:700;font-size:8.5px;letter-spacing:.06em;color:#c9a94f;">Town</div>
+      <div style="width:14px;height:2px;background:#c9a94f;"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;">
+      <div style="font-size:17px;filter:sepia(.6) saturate(.3) brightness(.85);">&#128506;</div>
+      <div style="font-family:'Cinzel',serif;font-weight:700;font-size:8.5px;letter-spacing:.06em;color:#8a7c5e;">Travel</div>
+      <div style="width:14px;height:2px;background:transparent;"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;">
+      <div style="font-size:17px;filter:sepia(.6) saturate(.3) brightness(.85);">&#128100;</div>
+      <div style="font-family:'Cinzel',serif;font-weight:700;font-size:8.5px;letter-spacing:.06em;color:#8a7c5e;">Hero</div>
+      <div style="width:14px;height:2px;background:transparent;"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;">
+      <div style="font-size:17px;filter:sepia(.6) saturate(.3) brightness(.85);">&#128293;</div>
+      <div style="font-family:'Cinzel',serif;font-weight:700;font-size:8.5px;letter-spacing:.06em;color:#8a7c5e;">Cook</div>
+      <div style="width:14px;height:2px;background:transparent;"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;">
+      <div style="font-size:17px;filter:sepia(.6) saturate(.3) brightness(.85);">&#127974;</div>
+      <div style="font-family:'Cinzel',serif;font-weight:700;font-size:8.5px;letter-spacing:.06em;color:#8a7c5e;">Shop</div>
+      <div style="width:14px;height:2px;background:transparent;"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;position:relative;">
+      <div style="font-size:17px;filter:sepia(.6) saturate(.3) brightness(.85);">&#128220;</div>
+      <div style="position:absolute;top:2px;right:24%;width:7px;height:7px;border-radius:50%;background:#c4551f;box-shadow:0 0 6px rgba(196,85,31,.8);"></div>
+      <div style="font-family:'Cinzel',serif;font-weight:700;font-size:8.5px;letter-spacing:.06em;color:#8a7c5e;">Quests</div>
+      <div style="width:14px;height:2px;background:transparent;"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;">
+      <div style="font-size:17px;filter:sepia(.6) saturate(.3) brightness(.85);">&#127890;</div>
+      <div style="font-family:'Cinzel',serif;font-weight:700;font-size:8.5px;letter-spacing:.06em;color:#8a7c5e;">Bag</div>
+      <div style="width:14px;height:2px;background:transparent;"></div>
+    </div>
+  </div>
+
+  <div style="padding:14px 16px 0;font-size:13.5px;line-height:1.55;color:#7a6f5b;">
+    <span style="font-family:'Cinzel',serif;font-weight:700;color:#a8802c;font-size:11px;letter-spacing:.14em;">MOTIF</span> &mdash; ruled double-line frames, wax-seal badges, hatched map terrain. Ember glow reserved for magic, forge and unclaimed rewards. Nav gains a 7th "Hero" slot for the character sheet.
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:400,&quot;height&quot;:1900}}"></script>
+</body>
+</html>
