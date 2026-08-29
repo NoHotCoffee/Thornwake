@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Thornwake</title>
+<meta name="description" content="Thornwake — an idle/incremental RPG. Gather, cook, smith, fight, and quest around the Hollow of Thornwake.">
+<meta name="theme-color" content="#332920">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Thornwake">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================ DESIGN TOKENS (Hearthstead) ============================ */
+:root{
+  /* surfaces */
+  --page:#241d17; --frame:#332920; --raised:#3d3123; --well:#271f17; --trough:#241c13;
+  /* borders */
+  --b-subtle:#4a3a22; --b-default:#5e4b2d; --b-card:#684f30; --b-strong:#6b5436; --b-control:#7a6339;
+  /* text */
+  --t-primary:#f0ebe0; --t-heading:#e8e2d6; --t-bright:#ede3cd; --t-body:#dccfb6; --t-prose:#c6b797;
+  --t-label:#bfaf8c; --t-muted:#b6a583; --t-dim:#a69573; --t-disabled:#8c7c58; --t-deepdisabled:#7b6c4c;
+  /* ember / honey */
+  --ember:#eda23c; --ember-light:#ffd6a0; --ember-mid:#ffc78f; --ember-amber:#f5ad52; --ember-dark:#a86a1c;
+  /* gold */
+  --gold:#ffc46b; --gold-light:#ffd28a; --gold-mid:#d09a2c; --gold-dark:#9a7420;
+  /* skills */
+  --sk-combat:#c86a3a; --sk-combat-l:#eeb98e;
+  --sk-wood:#8fbb5a; --sk-wood-l:#cfeaa6;
+  --sk-mine:#eda23c; --sk-mine-l:#ffcd96;
+  --sk-fish:#63a396; --sk-fish-l:#a8d8cf;
+  --sk-cook:#eda23c; --sk-cook-l:#ffcd96;
+  --sk-smith:#c6a3d8; --sk-smith-l:#e0cbe8;
+  /* semantic */
+  --danger:#c26a36; --success:#7cad50; --chip-neutral:#cbb28a; --locked:#726445;
+  /* terrain */
+  --t-forest:#324224; --t-forest-l:#5b8148; --t-rock:#4a4433; --t-rock-l:#7b6d4a;
+  --t-water:#3b5a54; --t-water-l:#6f9a90; --t-bramble:#5c3c2c; --t-bramble-l:#a05c3c;
+  --safe-t:env(safe-area-inset-top); --safe-b:env(safe-area-inset-bottom);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none;}
+html,body{margin:0;padding:0;height:100%;background:#000;color:var(--t-primary);font-family:'Barlow',sans-serif;overflow:hidden;-webkit-touch-callout:none;}
+h1,h2,h3{font-family:'Cinzel',serif;margin:0;letter-spacing:.02em;}
+.mono{font-family:'JetBrains Mono',monospace;}
+button{font:inherit;}
+
+#app{
+  max-width:480px; margin:0 auto; height:100dvh; display:flex; flex-direction:column;
+  background:radial-gradient(ellipse 130% 45% at 50% 0%, #3d3123, var(--frame) 70%), var(--frame);
+  position:relative; box-shadow:0 20px 50px rgba(0,0,0,.7);
+}
+#app.bg-combat{background:radial-gradient(ellipse 120% 50% at 50% 18%, #432f26, var(--frame) 72%), var(--frame);}
+#app.bg-hearth{background:radial-gradient(ellipse 120% 40% at 50% 0%, #4a3a27, var(--frame) 70%), var(--frame);}
+#app.bg-shop{background:radial-gradient(ellipse 130% 45% at 50% 0%, #373224, var(--frame) 70%), var(--frame);}
+
+/* ---- glyph icons ---- */
+.glyph{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:-0.15em;flex-shrink:0;}
+
+/* ---- chamfers ---- */
+.ch-card{clip-path:polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 11px 100%, 0 calc(100% - 11px));}
+.ch-btn{clip-path:polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));}
+.ch-tile{clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));}
+.ch-tile-lg{clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));}
+.ch-avatar{clip-path:polygon(14% 0, 86% 0, 100% 14%, 100% 86%, 86% 100%, 14% 100%, 0 86%, 0 14%);}
+.ch-hud-avatar{clip-path:polygon(22% 0, 78% 0, 100% 22%, 100% 78%, 78% 100%, 22% 100%, 0 78%, 0 22%);}
+.ch-sm{clip-path:polygon(0 0, calc(100% - 3px) 0, 100% 3px, 100% 100%, 3px 100%, 0 calc(100% - 3px));}
+
+/* ============================ HUD ============================ */
+#statusbar{
+  flex-shrink:0; padding:calc(11px + var(--safe-t)) 13px 10px;
+  background:linear-gradient(180deg,#4c3d2a,#372c20 60%,#2e251b);
+  border-bottom:1px solid #000; box-shadow:inset 0 1px 0 rgba(255,255,255,.07), 0 3px 10px rgba(0,0,0,.7);
+  position:relative;
+}
+#statusbar::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--ember),transparent); opacity:.5;}
+#statustop{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+#herobtn{background:none;border:none;display:flex;align-items:center;gap:10px;text-align:left;padding:0;min-width:0;flex:1;}
+#herobtn .avatar{
+  width:36px;height:36px;flex-shrink:0;
+  background:linear-gradient(145deg,#4f402d,#2c2318); border:1px solid var(--b-control);
+  box-shadow:0 0 12px rgba(237,162,60,.14); display:flex;align-items:center;justify-content:center;
+  color:var(--ember-mid); font-size:19px;
+}
+#herobtn .who{min-width:0;}
+#herobtn .namerow{display:flex;align-items:center;gap:4px;}
+#playername{font-family:'Cinzel',serif;font-weight:700;font-size:15.5px;color:var(--t-primary);letter-spacing:.03em;
+  text-shadow:0 0 14px rgba(255,140,60,.22); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:150px;}
+#herobtn .chev{color:var(--t-dim); flex-shrink:0;}
+#herobtn .chev svg{width:9px;height:9px;stroke-width:3;}
+#substat{display:flex; align-items:center; gap:6px; margin-top:2px;}
+#cblevel{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:9px; letter-spacing:.1em; color:#241c04; background:var(--chip-neutral); padding:1px 5px;}
+#curloc{font-size:10.5px; text-transform:uppercase; color:var(--t-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+#hudright{display:flex; align-items:center; flex-shrink:0;}
+#goldstat{display:flex; align-items:center; gap:6px; padding-left:10px; border-left:1px solid var(--b-subtle); flex-shrink:0;}
+#goldstat .glyph{width:15px;height:15px;color:var(--gold);}
+#sfxbtn{background:none; border:none; color:var(--t-dim); width:26px; height:26px; margin-left:8px; padding:0;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+#sfxbtn svg{width:17px;height:17px;}
+#sfxbtn.muted{color:var(--t-deepdisabled);}
+#goldlabel{font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.16em; color:var(--t-dim);}
+#goldval{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:16px; color:var(--gold); text-shadow:0 0 10px rgba(255,170,60,.3);}
+.hud-bars{margin-top:8px;}
+.hud-bar-row{display:flex; align-items:center; gap:7px; margin-top:5px;}
+.hud-bar-label{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:9px; width:19px; color:var(--t-label); flex-shrink:0;}
+.hud-hp-track{flex:1; height:15px; position:relative; clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px);}
+.hud-xp-track{flex:1; height:6px; position:relative;}
+.hud-hp-text{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#fff; font-weight:700;
+  text-shadow:0 0 3px #000, 0 0 3px #000, 0 1px 2px #000; z-index:1;}
+.rivet-row{display:flex; justify-content:space-between; padding:6px 6px 0;}
+.rivet{width:4px;height:4px;border-radius:50%;background:#5c4a30; box-shadow:inset 0 1px 1px rgba(255,255,255,.25);}
+
+/* ============================ HERO SHEET HEADER (replaces HUD when open) ============================ */
+#heroheader{display:none; flex-shrink:0; background:linear-gradient(180deg,#4c3d2a,#372c20); padding:calc(12px + var(--safe-t)) 13px 12px;
+  display:none; align-items:center; gap:11px; position:relative;}
+#heroheader::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--ember),transparent); opacity:.5;}
+#heroheader.show{display:flex;}
+#herobackbtn{width:34px;height:34px;flex-shrink:0;background:linear-gradient(180deg,#4d3e2b,#332a1f); border:1px solid var(--b-control); color:var(--t-body); display:flex;align-items:center;justify-content:center;}
+#herobackbtn svg{width:16px;height:16px;stroke-width:2.4;}
+#heroheader .title{font-family:'Cinzel',serif; font-weight:700; font-size:17px; color:var(--t-heading);}
+#heroheader .sub{font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.12em; color:var(--t-dim); margin-top:2px;}
+
+/* ============================ ACTIVE-ACTION STRIP ============================ */
+#activitybar{display:none; flex-shrink:0; background:var(--raised); border-bottom:1px solid var(--b-card);}
+.activity-row{display:flex; align-items:center; gap:9px; padding:8px 13px;}
+.activity-row + .activity-row{border-top:1px solid var(--b-subtle);}
+.activity-row .glyph{width:16px;height:16px;color:var(--ember-mid); flex-shrink:0;}
+.activity-label{font-size:11.5px; font-weight:600; color:var(--t-body); flex-shrink:0; white-space:nowrap; max-width:120px; overflow:hidden; text-overflow:ellipsis;}
+.activity-track{flex:1; height:6px; position:relative;}
+.activity-stop{flex-shrink:0; background:#403322; border:1px solid var(--b-control); color:var(--t-muted);
+  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:9px; letter-spacing:.1em; padding:4px 8px;}
+
+/* ============================ CONTENT ============================ */
+#content{flex:1; overflow-y:auto; padding:14px 13px 96px; -webkit-overflow-scrolling:touch;}
+.screen{display:none; animation:fadein .25s ease;}
+.screen.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+.section-header{display:flex; align-items:center; gap:9px; margin:18px 0 11px;}
+.section-header:first-child{margin-top:0;}
+.section-header .diamond{width:6px;height:6px;background:var(--ember);transform:rotate(45deg); flex-shrink:0; box-shadow:0 0 8px rgba(237,162,60,.8);}
+.section-header .label{font-family:'Cinzel',serif; font-weight:700; font-size:11px; letter-spacing:.22em; color:#d0c0a1; text-transform:uppercase; white-space:nowrap;}
+.section-header .rule{flex:1; height:1px; background:linear-gradient(90deg,#5c4830,transparent);}
+
+/* ---- cards ---- */
+.card{position:relative; padding:12px; margin-bottom:10px; background:linear-gradient(160deg,var(--c-hi),var(--c-lo));
+  border:1px solid var(--c-border); box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 2px 6px rgba(0,0,0,.6);}
+.card::before{content:'';position:absolute; left:0; top:11px; bottom:11px; width:2px; background:var(--c-rail); box-shadow:0 0 9px var(--c-rail-glow);}
+.card.ready::before{width:3px; box-shadow:0 0 14px var(--c-rail-glow);}
+.card--neutral{--c-hi:#453828; --c-lo:#332a1f; --c-border:#684f30; --c-rail:#cbb28a; --c-rail-glow:rgba(203,178,138,.55);}
+.card--combat{--c-hi:#4a382b; --c-lo:#33261e; --c-border:#644732; --c-rail:#c86a3a; --c-rail-glow:rgba(200,106,58,.55);}
+.card--wood{--c-hi:#3d402a; --c-lo:#313524; --c-border:#615833; --c-rail:#8fbb5a; --c-rail-glow:rgba(143,187,90,.55);}
+.card--mine{--c-hi:#3e3c28; --c-lo:#332c1f; --c-border:#615833; --c-rail:#eda23c; --c-rail-glow:rgba(237,162,60,.55);}
+.card--fish{--c-hi:#3b3d2c; --c-lo:#302c20; --c-border:#5d5433; --c-rail:#63a396; --c-rail-glow:rgba(99,163,150,.55);}
+.card--cook{--c-hi:#4a3a27; --c-lo:#34271c; --c-border:#6b4a2c; --c-rail:#eda23c; --c-rail-glow:rgba(237,162,60,.55);}
+.card--smith{--c-hi:#453829; --c-lo:#342a20; --c-border:#634a43; --c-rail:#c6a3d8; --c-rail-glow:rgba(198,163,216,.55);}
+.card--gold{--c-hi:#4c3c25; --c-lo:#352a1d; --c-border:#83662f; --c-rail:#ffc46b; --c-rail-glow:rgba(255,196,107,.55);}
+.card--locked{background:linear-gradient(160deg,#373224,#2f291f); border:1px dashed var(--b-default); opacity:.55; box-shadow:none;}
+.card--locked::before{display:none;}
+.card--near-max{box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 2px 6px rgba(0,0,0,.6), 0 0 22px rgba(237,162,60,.09);}
+
+.card-row{display:flex; align-items:center; gap:11px;}
+.card-icon{width:44px;height:44px;flex-shrink:0; background:radial-gradient(circle at 35% 30%,#3a2f22,#1c160f); border:1px solid var(--b-default);
+  display:flex; align-items:center; justify-content:center; color:var(--ember-mid); font-size:20px;}
+.card-icon .glyph{width:20px;height:20px;}
+.card-info{flex:1; min-width:0;}
+.card-title{font-family:'Cinzel',serif; font-weight:700; font-size:14px; color:var(--t-heading);}
+.card-sub{font-size:11.5px; color:var(--t-dim); margin-top:3px; font-family:'JetBrains Mono',monospace;}
+.card-sub.prose{font-family:'Barlow',sans-serif; color:var(--t-prose); line-height:1.6; font-size:13px;}
+
+/* ---- buttons ---- */
+.btn{border:none; padding:11px 14px; font-family:'Barlow',sans-serif; font-weight:700; font-size:13px; letter-spacing:.1em;
+  text-transform:uppercase; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  transition:transform .08s ease, filter .15s ease; white-space:nowrap; position:relative; overflow:hidden;}
+.btn:active{transform:scale(.96); filter:brightness(.92);}
+.btn:disabled{opacity:.35; filter:grayscale(.4); pointer-events:none;}
+.btn-block{width:100%;}
+.btn-sm{padding:8px 11px; font-size:11px; letter-spacing:.08em;}
+.btn-leaf{background:linear-gradient(180deg,#7cad50,#4a7229); border:1px solid #4d7a33; color:#f2f8ea;
+  box-shadow:inset 0 1px 0 rgba(220,255,190,.3), 0 0 16px rgba(124,173,80,.22);}
+.btn-blood{background:linear-gradient(180deg,#c26a36,#7d4a1e); border:1px solid #7d4a22; color:#ffe8d8;
+  box-shadow:inset 0 1px 0 rgba(255,220,190,.25), 0 0 14px rgba(196,110,54,.2);}
+.btn-gold{background:linear-gradient(180deg,#ffd28a,#d09a2c); border:1px solid #9a7420; color:#241c04;
+  box-shadow:inset 0 1px 0 rgba(255,245,210,.6), 0 0 14px rgba(255,180,80,.25);}
+.btn-purple{background:linear-gradient(180deg,#ad8bc6,#75568c); border:1px solid #7f6690; color:#f4ecff;
+  box-shadow:inset 0 1px 0 rgba(240,220,255,.35), 0 0 16px rgba(169,127,208,.28);}
+.btn-ghost{background:#403322; border:1px solid var(--b-control); color:var(--t-muted);}
+.btn-sweep::before{content:'';position:absolute; top:0; bottom:0; width:40%; left:-100%;
+  background:linear-gradient(90deg,transparent,rgba(255,220,190,.22),transparent); animation:sweep 3.2s ease-in-out infinite;}
+@keyframes sweep{0%{left:-100%;} 100%{left:220%;}}
+
+/* stop pill (activity strip / progress cards) */
+.pill-stop{background:#403322; border:1px solid var(--b-control); color:var(--t-muted);
+  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:9.5px; letter-spacing:.1em; padding:5px 10px;}
+
+/* ---- bars ---- */
+.bar-trough{position:relative; height:7px; background:var(--trough); border:1px solid var(--b-strong);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.9); overflow:hidden;}
+.bar-fill{position:absolute; left:1px; top:1px; bottom:1px; background:linear-gradient(180deg,var(--f-hi),var(--f-mid) 42%,var(--f-lo));
+  box-shadow:0 0 12px var(--f-glow); transition:width .12s linear;}
+.bar-fill .bar-sheen{position:absolute; inset:0; background-image:repeating-linear-gradient(115deg, rgba(255,255,255,.18) 0 3px, transparent 3px 9px); pointer-events:none;}
+.bar-fill .bar-edge{position:absolute; top:0; bottom:0; right:-1.5px; width:3px; background:#fff8ee; box-shadow:0 0 12px var(--f-hi);}
+.f-hp{--f-hi:#ff9b6b; --f-mid:#d47340; --f-lo:#94512c; --f-glow:rgba(212,115,64,.55);}
+.f-xp{--f-hi:#ffd28a; --f-mid:#eeb35a; --f-lo:#e2952c; --f-glow:rgba(226,149,44,.55);}
+.f-wood{--f-hi:#d3eda8; --f-mid:#8fbb5a; --f-lo:#4a7229; --f-glow:rgba(143,187,90,.55);}
+.f-mine{--f-hi:#ffd0a4; --f-mid:#eda23c; --f-lo:#a86a1c; --f-glow:rgba(237,162,60,.55);}
+.f-fish{--f-hi:#a8d8cf; --f-mid:#63a396; --f-lo:#3b5a54; --f-glow:rgba(99,163,150,.55);}
+.f-cook{--f-hi:#ffd0a4; --f-mid:#eda23c; --f-lo:#a86a1c; --f-glow:rgba(237,162,60,.55);}
+.f-smith{--f-hi:#e0cbe8; --f-mid:#c0a0d4; --f-lo:#ad8bc6; --f-glow:rgba(173,139,198,.5);}
+
+/* ---- progress ring (Town skill cards) ---- */
+.ring-wrap{position:relative; width:50px; height:50px; flex-shrink:0;}
+.ring-wrap svg{transform:rotate(-90deg);}
+.ring-bg{fill:none; stroke:#4a3a26; stroke-width:5.5;}
+.ring-fg{fill:none; stroke-width:5.5; stroke-linecap:round; transition:stroke-dashoffset .4s ease;}
+.ring-tile{position:absolute; inset:11px; background:linear-gradient(150deg,var(--tile-hi),var(--tile-lo)); border:1px solid var(--tile-border);
+  display:flex; align-items:center; justify-content:center; color:var(--tile-fg);}
+.ring-tile .glyph{width:15px;height:15px;}
+.ring-lvl{position:absolute; bottom:-3px; right:-4px; background:linear-gradient(180deg,var(--lvl-hi),var(--lvl-lo)); color:#241c04;
+  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:9.5px; padding:0 5px; border:1px solid var(--frame);}
+.heat-halo{position:absolute; inset:-7px; border-radius:50%; background:radial-gradient(circle,rgba(237,162,60,.32),transparent 66%); animation:heat 2.4s ease-in-out infinite; pointer-events:none;}
+@keyframes heat{0%,100%{opacity:.45;} 50%{opacity:1;}}
+
+/* ============================ TOWN ============================ */
+.location-blurb{margin:0 0 11px; font-size:13px; color:var(--t-prose); line-height:1.6;}
+
+/* ============================ HERO SHEET ============================ */
+#screen-hero .portrait-row{display:flex; gap:11px; margin-bottom:14px;}
+.hero-portrait{width:150px; height:196px; flex-shrink:0; position:relative;
+  background:radial-gradient(ellipse 70% 60% at 50% 32%, #4f402d, #231b14 78%); border:1px solid #72593c;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.9);}
+.hero-portrait .floorwash{position:absolute; left:0; right:0; bottom:0; height:52%;
+  background:linear-gradient(180deg, rgba(237,162,60,0), rgba(237,162,60,.13));}
+.hero-portrait .heroglyph{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--ember);
+  filter:drop-shadow(0 0 16px rgba(255,140,60,.28));}
+.hero-portrait .heroglyph .glyph{width:112px; height:112px;}
+.hero-portrait .slot-tl{position:absolute; top:9px; left:9px; color:var(--gold);}
+.hero-portrait .slot-tr{position:absolute; top:9px; right:9px; color:#5c4830;}
+.hero-portrait .slot-tl .glyph, .hero-portrait .slot-tr .glyph{width:20px;height:20px;}
+.hero-portrait .hp-scrim{position:absolute; left:0; right:0; bottom:0; background:rgba(8,10,12,.92); padding:6px 9px 8px;}
+.hero-portrait .hp-label{font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.12em; color:var(--t-label); margin-bottom:3px;}
+.hero-stats{flex:1; display:flex; flex-direction:column; gap:8px; min-width:0;}
+.stat-card{flex:1; background:var(--well); border:1px solid var(--b-subtle); padding:9px 10px; display:flex; align-items:center; gap:8px;}
+.stat-card .txt{flex:1; min-width:0;}
+.stat-card .lbl{font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.14em; color:var(--t-label);}
+.stat-card .val{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:26px; line-height:1.1;}
+.stat-card.atk .val{color:#ff8f6e; text-shadow:0 0 14px rgba(240,160,80,.35);}
+.stat-card.def .val{color:#b9cf95;}
+.stat-card .deriv{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--t-dim); margin-top:2px;}
+.stat-card .icon{width:26px;height:26px; color:var(--t-deepdisabled); flex-shrink:0;}
+
+.carried-row{display:flex; gap:9px; margin-bottom:4px;}
+.equip-slot{flex:1; display:flex; align-items:center; gap:9px; padding:10px;}
+.equip-slot.filled{background:linear-gradient(160deg,#4c3c25,#352a1d); border:1px solid #83662f;}
+.equip-slot.empty{background:#2f291f; border:1px dashed #5c4830;}
+.equip-tile{width:38px;height:38px; flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+.equip-slot.filled .equip-tile{background:radial-gradient(circle at 35% 30%,#5a4a2a,#2c2214); border:1px solid #83662f; color:var(--gold);}
+.equip-slot.empty .equip-tile{background:transparent; border:1px dashed #5c4830; color:#5c4830;}
+.equip-tile .glyph{width:19px;height:19px;}
+.equip-txt .lbl{font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.14em; color:var(--t-dim);}
+.equip-slot.filled .equip-txt .name{font-family:'Cinzel',serif; font-weight:700; font-size:13px; color:var(--t-heading); margin-top:2px;}
+.equip-slot.filled .equip-txt .effect{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold); margin-top:1px;}
+.equip-slot.empty .equip-txt .name{font-family:'Cinzel',serif; font-weight:700; font-size:13px; color:#726445; margin-top:2px;}
+.equip-slot.empty .equip-txt .hint{font-size:10px; color:#726445; margin-top:1px;}
+
+.ledger{background:var(--well); border:1px solid var(--b-subtle); box-shadow:inset 0 2px 8px rgba(0,0,0,.8);}
+.ledger-row{display:flex; align-items:center; gap:9px; padding:8px 10px;}
+.ledger-row + .ledger-row{border-top:1px solid #2f2921;}
+.ledger-row .chip{width:2px; height:22px; flex-shrink:0;}
+.ledger-row .glyph{width:16px;height:16px; flex-shrink:0; color:var(--t-dim);}
+.ledger-row .lname{flex-shrink:0; width:82px; font-size:13px; color:#dccfb6; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ledger-row.active{background:rgba(200,106,58,.06);}
+.ledger-row.active .lname{color:#e8e2d6; font-weight:600;}
+.ledger-row .minibar{width:74px; flex-shrink:0;}
+.ledger-row .lvl{margin-left:auto; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; color:var(--t-body);}
+
+.stat-tiles{display:flex; gap:8px; margin-top:11px;}
+.stat-tile{flex:1; background:var(--well); border:1px solid var(--b-subtle); padding:9px; text-align:center;}
+.stat-tile .lbl{font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.1em; color:var(--t-dim);}
+.stat-tile .val{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px; color:var(--t-body); margin-top:3px;}
+
+/* ============================ MAP ============================ */
+.map-wrap{background:var(--well); border:1px solid var(--b-default); padding:4px; margin-bottom:12px;}
+.map-wrap svg{display:block; width:100%; height:auto;}
+.map-pin{cursor:pointer;}
+.map-pin-label{font-family:'Cinzel',serif; font-weight:700; font-size:9px; fill:var(--t-body); text-anchor:middle;
+  paint-order:stroke; stroke:#2b231b; stroke-width:3.5;}
+.map-pin.locked .map-pin-label{fill:#726445;}
+.map-pulse{fill:none; stroke-width:1.6; transform-origin:center; transform-box:fill-box; animation:mappulse 1.9s ease-out infinite;}
+@keyframes mappulse{0%{transform:scale(.75); opacity:.85;} 100%{transform:scale(1.5); opacity:0;}}
+.map-current-dot{fill:var(--ember); stroke:#0d100a; stroke-width:1;}
+
+/* ---- location banner ---- */
+.location-banner{background:linear-gradient(160deg,#453828,#332a1f); border:1px solid #684f30; padding:13px; margin-bottom:13px; position:relative;}
+.location-banner::before{content:'';position:absolute; left:0; top:11px; bottom:11px; width:2px; background:#cbb28a; box-shadow:0 0 9px rgba(203,178,138,.5);}
+.lb-title{font-family:'Cinzel',serif; font-weight:700; font-size:16px; color:var(--t-heading); display:flex; align-items:center; gap:8px;}
+.lb-title .glyph{width:17px;height:17px; color:var(--ember-mid);}
+.lb-desc{font-size:13px; color:var(--t-prose); margin-top:7px; line-height:1.6;}
+.lb-hint{font-size:11px; color:var(--t-dim); margin-top:9px; font-family:'JetBrains Mono',monospace; display:flex; align-items:center; gap:5px;}
+.lb-skill{font-size:10.5px; font-family:'JetBrains Mono',monospace; margin-top:9px; letter-spacing:.04em;}
+
+/* ============================ COMBAT ============================ */
+.vs-wrap{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:4px 0 14px; position:relative;}
+.fighter{flex:1; text-align:center; position:relative;}
+.fighter-portrait{width:104px; height:104px; margin:0 auto 8px; display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle at 42% 30%, #3b452c, #20241a 76%); border:2px solid #5d6340; color:var(--sk-wood-l); position:relative;}
+.fighter-portrait::after{content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 120%, rgba(237,162,60,.16), transparent 60%);}
+.fighter-portrait .glyph{width:58px;height:58px; stroke-width:1.5; position:relative; z-index:1;}
+.fighter.enemy .fighter-portrait{background:radial-gradient(circle at 42% 30%, #523830, #3a2920 76%); border-color:#7a4632; box-shadow:0 0 22px rgba(196,120,60,.22); color:#eeb98e;}
+.fighter.enemy .fighter-portrait::after{display:none;}
+.fighter-name{font-family:'Cinzel',serif; font-weight:700; font-size:13px; color:var(--t-heading);}
+.fighter-hpnum{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--t-muted); margin-top:4px;}
+.vs-mark{font-family:'Cinzel',serif; color:var(--danger); font-weight:900; font-size:14px; text-shadow:0 0 14px rgba(196,110,54,.8); flex-shrink:0;}
+.floater{position:absolute; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:26px; color:#ffd0b0;
+  text-shadow:0 0 18px rgba(240,150,70,1), 0 2px 4px rgba(0,0,0,.9); left:50%; top:20%; transform:translateX(-50%);
+  pointer-events:none; animation:emberrise 1.4s ease-out forwards; z-index:50;}
+@keyframes emberrise{0%{opacity:0; transform:translateX(-50%) translateY(4px) scale(.6);} 30%{opacity:.9;}
+  100%{opacity:0; transform:translateX(-50%) translateY(-16px) scale(1);}}
+.combat-log{background:#1d1711; border:1px solid var(--b-subtle); box-shadow:inset 0 2px 10px rgba(0,0,0,.95);
+  padding:9px 11px; height:126px; overflow-y:auto; font-family:'JetBrains Mono',monospace; font-size:11.5px; line-height:1.8; margin-bottom:12px;}
+.combat-log div{color:#63563c;}
+.combat-log div:nth-last-child(1){color:#ffd6a0; text-shadow:0 0 6px rgba(255,214,160,.3);}
+.combat-log div:nth-last-child(2){color:#bfaf8c;}
+.combat-log div:nth-last-child(3){color:#a69573;}
+.combat-log div:nth-last-child(4){color:#877750;}
+.action-row{display:flex; gap:8px;}
+.action-row .btn.flex2{flex:2;}
+.action-row .btn.flex1{flex:1;}
+.btn-leaf-soft{background:linear-gradient(180deg,#3a4526,#252e16); border:1px solid #4d5a30; color:#b8dd86;}
+.roster-hint{margin-top:4px;}
+.difficulty-chip{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:8.5px; letter-spacing:.1em; padding:1px 5px; background:var(--danger); color:#241004; margin-left:6px;}
+
+/* ============================ QUESTS ============================ */
+.quest-badge{font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; padding:2px 7px; letter-spacing:.05em; text-transform:uppercase; flex-shrink:0;}
+.quest-badge.available{background:#2a3a1e; color:var(--sk-wood); border:1px solid var(--sk-wood);}
+.quest-badge.active{background:#3a2f14; color:var(--ember-light); border:1px solid var(--ember);}
+.quest-badge.complete{background:#22301f; color:#8fbf6a; border:1px solid #4a6b34;}
+.quest-desc{font-size:12.5px; color:var(--t-prose); line-height:1.55; margin:8px 0 10px;}
+.quest-obj-panel{background:#211a13; border:1px solid #725729; padding:9px 10px; margin-bottom:10px;}
+.quest-obj-row{display:flex; align-items:center; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--t-body); text-transform:uppercase; margin-bottom:7px;}
+.tally{display:flex; gap:3px;}
+.tally-seg{flex:1; height:5px; background:#4a3a22;}
+.tally-seg.filled{background:var(--gold); box-shadow:0 0 6px rgba(255,196,107,.6);}
+.quest-reward{font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--t-dim); margin-bottom:10px; text-transform:uppercase;}
+.quest-settled-row{display:flex; align-items:center; gap:9px;}
+.quest-settled-row .glyph{width:15px;height:15px; color:var(--sk-wood);}
+.quest-settled-row .name{color:var(--t-dim); text-decoration:line-through; text-decoration-color:#6c5b3b; flex:1;}
+.quest-settled-tag{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.08em; color:var(--t-deepdisabled);}
+.quest-locked-req{font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--t-deepdisabled); text-transform:uppercase; margin-top:6px;}
+
+/* ============================ SATCHEL ============================ */
+.item-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+.item-tile{position:relative; aspect-ratio:1; display:flex; align-items:center; justify-content:center;}
+.item-tile.filled{background:linear-gradient(160deg,#453828,#332a1f); border:1px solid #684f30; color:var(--ember-mid);}
+.item-tile.empty{background:var(--well); border:1px dashed var(--b-subtle);}
+.item-tile .glyph{width:27px;height:27px;}
+.item-count{position:absolute; bottom:3px; right:4px; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10.5px; color:#f0ebe0; text-shadow:0 1px 2px #000;}
+.worn-slots{display:flex; gap:8px; margin-top:4px;}
+.worn-slot{flex:1; display:flex; align-items:center; gap:8px; padding:8px;}
+.worn-slot.filled{background:linear-gradient(160deg,#4c3c25,#352a1d); border:1px solid #83662f;}
+.worn-slot.empty{background:#2f291f; border:1px dashed #5c4830;}
+.worn-tile{width:30px;height:30px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:var(--gold);}
+.worn-slot.empty .worn-tile{color:#5c4830;}
+.worn-tile .glyph{width:16px;height:16px;}
+.worn-slot .name{font-family:'Cinzel',serif; font-weight:700; font-size:11.5px; color:var(--t-heading);}
+.worn-slot.empty .name{color:#726445;}
+
+/* ============================ SHOP ============================ */
+.subtabs{display:flex; margin-bottom:12px; background:var(--well); border:1px solid var(--b-default);}
+.subtab{flex:1; padding:9px; text-align:center; color:var(--t-muted); font-family:'Barlow',sans-serif; font-weight:700; font-size:12.5px; letter-spacing:.1em; text-transform:uppercase;}
+.subtab.active{background:linear-gradient(180deg,#ffd28a,#d09a2c); color:#241c04;}
+.gold-inline{color:var(--gold); font-family:'JetBrains Mono',monospace; font-weight:700;}
+.held-chip{font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.05em; padding:1px 6px; background:var(--chip-neutral); color:#241c04; margin-left:6px;}
+.sell-row{display:flex; align-items:center; gap:11px; padding:9px 0;}
+.sell-row + .sell-row{border-top:1px solid var(--b-subtle);}
+
+/* ============================ NAV ============================ */
+#nav{position:absolute; left:0; right:0; bottom:0; display:flex; background:linear-gradient(180deg,#423527,#302620);
+  border-top:1px solid var(--b-strong); box-shadow:0 -2px 10px rgba(0,0,0,.7); padding:6px 2px calc(8px + var(--safe-b));}
+.navbtn{flex:1; background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px;
+  color:var(--t-dim); font-family:'Barlow',sans-serif; font-size:9px; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  padding:6px 0; position:relative;}
+.navbtn .glyph{width:21px;height:21px;}
+.navbtn.active{color:var(--ember-light);}
+.navbtn.active::before{content:''; position:absolute; top:0; left:24%; right:24%; height:2px; background:var(--ember); box-shadow:0 0 8px rgba(237,162,60,.8);}
+.navdot{position:absolute; top:3px; right:23%; width:7px; height:7px; background:var(--ember); transform:rotate(45deg);
+  box-shadow:0 0 7px rgba(237,162,60,.9); display:none;}
+.navdot.show{display:block;}
+
+/* ---- toast ---- */
+#toastwrap{position:absolute; top:calc(var(--safe-t) + 8px); left:0; right:0; display:flex; flex-direction:column; align-items:center; gap:6px; z-index:100; pointer-events:none;}
+.toast{background:#3a3a20ee; border:1px solid var(--gold-mid); color:var(--gold-light); font-family:'Cinzel',serif; font-weight:700; font-size:12.5px;
+  padding:9px 16px 9px 12px; box-shadow:0 4px 18px rgba(0,0,0,.6), 0 0 22px rgba(255,180,80,.15);
+  animation:toastin .3s ease, toastout .3s ease 2.2s forwards; max-width:88%; text-align:center; display:flex; align-items:center; gap:8px;}
+.toast::before{content:''; width:5px; height:5px; background:var(--ember); transform:rotate(45deg); box-shadow:0 0 6px var(--ember); flex-shrink:0;}
+.toast.event{background:#1c2a28ee; border-color:var(--sk-fish); color:var(--sk-fish-l);
+  box-shadow:0 4px 18px rgba(0,0,0,.6), 0 0 22px rgba(99,163,150,.22); animation:toastin .3s ease, toastout .3s ease 2.9s forwards;}
+.toast.event::before{background:var(--sk-fish); box-shadow:0 0 6px var(--sk-fish);}
+@keyframes toastin{from{opacity:0; transform:translateY(-10px) scale(.9);} to{opacity:1; transform:translateY(0) scale(1);}}
+@keyframes toastout{from{opacity:1;} to{opacity:0; transform:translateY(-6px);}}
+
+.empty-hint{text-align:center; color:var(--t-dim); font-size:12.5px; padding:24px 10px; font-style:italic;}
+
+@media (prefers-reduced-motion: reduce){
+  .heat-halo, .btn-sweep::before, .map-pulse{animation:none !important;}
+}
+</style>
+</head>
+<body>
+<!-- ============================ ICON SPRITE (verbatim from Hearthstead design canvas) ============================ -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden;" aria-hidden="true"><defs>
+  <symbol id="g-hero" viewBox="0 0 24 24"><circle cx="12" cy="7.3" r="3.6" fill="currentColor" opacity=".2" stroke="none"></circle><path d="M4.6,20.2 C4.6,15.4 8,12.7 12,12.7 C16,12.7 19.4,15.4 19.4,20.2 Z" fill="currentColor" opacity=".2" stroke="none"></path><circle cx="12" cy="7.3" r="3.6"></circle><path d="M4.6,20.2 C4.6,15.4 8,12.7 12,12.7 C16,12.7 19.4,15.4 19.4,20.2 Z"></path></symbol>
+  <symbol id="g-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="12" cy="12" r="8.2"></circle><path d="M12,7.6 V16.4 M9.6,9.6 C9.6,8.4 14.4,8.4 14.4,10.6 C14.4,12.6 9.6,11.6 9.6,13.8 C9.6,15.8 14.4,15.6 14.4,14.4"></path></symbol>
+  <symbol id="g-house" viewBox="0 0 24 24"><path d="M6.4,10.6 L12,5.8 L17.6,10.6 V20 H6.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.2,11.6 L12,4 L20.8,11.6"></path><path d="M6.4,10.2 V20 H17.6 V10.2"></path><path d="M9.9,20 V14.6 H14.1 V20"></path><path d="M16.2,8.6 V4.8 H18.4 V10.4"></path><circle cx="12" cy="8.4" r="1.1" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-map" viewBox="0 0 24 24"><path d="M3.4,6.4 L9.4,4.4 L14.6,6.6 L20.6,4.4 V17.6 L14.6,19.6 L9.4,17.4 L3.4,19.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.4,6.4 L9.4,4.4 L14.6,6.6 L20.6,4.4 V17.6 L14.6,19.6 L9.4,17.4 L3.4,19.6 Z"></path><path d="M9.4,4.4 V17.4 M14.6,6.6 V19.6"></path></symbol>
+  <symbol id="g-flame" viewBox="0 0 24 24"><path d="M12,2.8 C15.8,8.4 17.8,11.4 17.8,14.6 A5.8,5.8 0 0 1 6.2,14.6 C6.2,11.4 8.2,8.4 12,2.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,2.8 C15.8,8.4 17.8,11.4 17.8,14.6 A5.8,5.8 0 0 1 6.2,14.6 C6.2,11.4 8.2,8.4 12,2.8 Z"></path><path d="M12,11.4 C13.7,13.6 14.5,14.6 14.5,15.8 A2.5,2.5 0 0 1 9.5,15.8 C9.5,14.6 10.3,13.6 12,11.4 Z" fill="currentColor" stroke="none"></path></symbol>
+  <symbol id="g-stall" viewBox="0 0 24 24"><path d="M4.2,9 H19.8 V20 H4.2 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M2.6,9 L5,3.8 H19 L21.4,9 Z"></path><path d="M2.6,9 q2.4,2.6 4.7,0 q2.4,2.6 4.7,0 q2.4,2.6 4.7,0 q2.4,2.6 4.7,0" fill="currentColor" stroke="none" opacity=".55"></path><path d="M4.2,9.4 V20 H19.8 V9.4"></path><path d="M8.8,20 V13.4 H15.2 V20"></path></symbol>
+  <symbol id="g-scroll" viewBox="0 0 24 24"><path d="M6.4,3.6 H17.6 V20.4 H6.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M6.4,3.6 H17.6 V20.4 H6.4 Z"></path><path d="M9.2,7.8 H14.8 M9.2,11.4 H14.8 M9.2,15 H13"></path><circle cx="17.6" cy="3.6" r="1.5" fill="currentColor" stroke="none" opacity=".5"></circle></symbol>
+  <symbol id="g-bag" viewBox="0 0 24 24"><path d="M5,8.2 H19 L20.4,20.2 H3.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5,8.2 H19 L20.4,20.2 H3.6 Z"></path><path d="M8.8,8.2 C8.8,5.4 10.2,3.8 12,3.8 C13.8,3.8 15.2,5.4 15.2,8.2"></path><path d="M3.9,12.4 H20.1"></path></symbol>
+  <symbol id="g-axe" viewBox="0 0 24 24"><path d="M12.4,3.6 L20.8,7.8 L17,14.4 L10.2,10.2 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M7,21 L15.2,6.6" stroke-width="2.4"></path><path d="M12.4,3.6 L20.8,7.8 L17,14.4 L10.2,10.2 Z"></path><path d="M14.4,6.2 L17.6,11.6" opacity=".6"></path></symbol>
+  <symbol id="g-pick" viewBox="0 0 24 24"><path d="M12,21 V9.6" stroke-width="2.4"></path><path d="M3.4,8.4 C7.4,3.8 16.6,3.8 20.6,8.4 C16.8,7 15,7.6 12,9.6 C9,7.6 7.2,7 3.4,8.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.4,8.4 C7.4,3.8 16.6,3.8 20.6,8.4 C16.8,7 15,7.6 12,9.6 C9,7.6 7.2,7 3.4,8.4 Z"></path></symbol>
+  <symbol id="g-rod" viewBox="0 0 24 24"><path d="M3.6,20.4 L17.8,4.6" stroke-width="2.2"></path><path d="M17.8,4.6 Q20.4,7.6 19.2,10.4"></path><path d="M19,10.6 V12.4"></path><circle cx="19" cy="14.6" r="2.4" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="19" cy="14.6" r="2.4"></circle></symbol>
+  <symbol id="g-fish" viewBox="0 0 24 24"><path d="M15.6,12 C15.6,15.4 12.8,18.2 9.2,18.2 C5.6,18.2 2.8,15.4 2.8,12 C2.8,8.6 5.6,5.8 9.2,5.8 C12.8,5.8 15.6,8.6 15.6,12 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M15.6,12 C15.6,15.4 12.8,18.2 9.2,18.2 C5.6,18.2 2.8,15.4 2.8,12 C2.8,8.6 5.6,5.8 9.2,5.8 C12.8,5.8 15.6,8.6 15.6,12 Z"></path><path d="M15.6,12 L21.4,7.6 V16.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M15.6,12 L21.4,7.6 V16.4 Z"></path><path d="M8.6,6.2 Q10,9 8.6,11.2" opacity=".55"></path><circle cx="6.4" cy="10.6" r="1.1" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-log" viewBox="0 0 24 24"><path d="M7.6,4.6 H17 A3.4,7.4 0 0 1 17,19.4 H7.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M7.6,4.6 H17 A3.4,7.4 0 0 1 17,19.4 H7.6 A3.4,7.4 0 0 0 7.6,4.6 Z"></path><ellipse cx="7.6" cy="12" rx="3.4" ry="7.4"></ellipse><ellipse cx="7.6" cy="12" rx="1.5" ry="3.4" opacity=".65"></ellipse></symbol>
+  <symbol id="g-ore" viewBox="0 0 24 24"><path d="M12,3 L20.4,9.8 L16.6,20.6 H7.4 L3.6,9.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,3 L20.4,9.8 L16.6,20.6 H7.4 L3.6,9.8 Z"></path><path d="M3.6,9.8 H20.4 M12,3 L8.6,9.8 L12,20.6 L15.4,9.8 Z"></path><circle cx="12" cy="7" r="1" fill="currentColor" stroke="none" opacity=".7"></circle></symbol>
+  <symbol id="g-bar" viewBox="0 0 24 24"><path d="M2.6,16.6 L6.8,8.6 H21.4 L17.2,16.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M2.6,16.6 L6.8,8.6 H21.4 L17.2,16.6 Z"></path><path d="M6.8,8.6 L2.6,16.6 M17.2,16.6 L21.4,8.6" opacity=".6"></path><path d="M9.4,12.6 H16" opacity=".6"></path></symbol>
+  <symbol id="g-meal" viewBox="0 0 24 24"><path d="M3.4,12.4 A8.6,8.6 0 0 0 20.6,12.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.4,12.4 A8.6,8.6 0 0 0 20.6,12.4"></path><path d="M1.8,12.4 H22.2" stroke-width="2"></path><path d="M7.2,8.6 C8.8,6 15.2,6 16.8,8.6"></path><circle cx="12" cy="5.4" r="1.2" fill="currentColor" stroke="none" opacity=".75"></circle></symbol>
+  <symbol id="g-hammer" viewBox="0 0 24 24"><path d="M7.6,4 L20.4,8.8 L18.6,13.6 L5.8,8.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M10.6,21.2 L15.4,9.4" stroke-width="2.4"></path><path d="M7.6,4 L20.4,8.8 L18.6,13.6 L5.8,8.8 Z"></path></symbol>
+  <symbol id="g-anvil" viewBox="0 0 24 24"><path d="M3.4,8.6 H20.6 L17.2,14 H6.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M3.4,8.6 H20.6 L17.2,14 H6.8 Z"></path><path d="M10.2,14 V17 H13.8 V14"></path><path d="M5.6,20.4 H18.4 L16.6,17 H7.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5.6,20.4 H18.4 L16.6,17 H7.4 Z"></path></symbol>
+  <symbol id="g-sword" viewBox="0 0 24 24"><path d="M12,2.6 L14.2,6.4 V14.4 H9.8 V6.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,2.6 L14.2,6.4 V14.4 H9.8 V6.4 Z"></path><path d="M7.8,14.8 H16.2" stroke-width="2.2"></path><path d="M12,15.2 V20.4"></path><path d="M9.8,21 H14.2" stroke-width="2"></path></symbol>
+  <symbol id="g-shield" viewBox="0 0 24 24"><path d="M12,3 L20,5.8 V12.6 C20,17.6 12,21.2 12,21.2 C12,21.2 4,17.6 4,12.6 V5.8 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,3 L20,5.8 V12.6 C20,17.6 12,21.2 12,21.2 C12,21.2 4,17.6 4,12.6 V5.8 Z"></path><path d="M12,7.4 L15.4,8.8 V12.4 C15.4,14.8 12,16.6 12,16.6 C12,16.6 8.6,14.8 8.6,12.4 V8.8 Z" fill="currentColor" stroke="none" opacity=".45"></path></symbol>
+  <symbol id="g-lock" viewBox="0 0 24 24"><path d="M5.4,10.4 H18.6 V20.6 H5.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5.4,10.4 H18.6 V20.6 H5.4 Z"></path><path d="M8.4,10.4 V7.4 A3.6,3.6 0 0 1 15.6,7.4 V10.4"></path><circle cx="12" cy="15.4" r="1.5" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-tree" viewBox="0 0 24 24"><path d="M12,2.6 L17.4,10 H6.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,7 L19.4,16.6 H4.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,2.6 L17.4,10 H6.6 Z"></path><path d="M12,7 L19.4,16.6 H4.6 Z"></path><path d="M12,16.6 V21.4" stroke-width="2.4"></path></symbol>
+  <symbol id="g-rock" viewBox="0 0 24 24"><path d="M2.6,19.4 L7.8,8.6 L14,12.8 L11,19.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M11,19.4 L15.2,6.6 L21.4,12 L20.6,19.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M2.6,19.4 L7.8,8.6 L14,12.8 L11,19.4 Z"></path><path d="M11,19.4 L15.2,6.6 L21.4,12 L20.6,19.4 Z"></path></symbol>
+  <symbol id="g-wave" viewBox="0 0 24 24"><path d="M1.8,8.4 q3.1,-3.2 6.2,0 t6.2,0 t6.2,0" stroke-width="2"></path><path d="M1.8,13 q3.1,-3.2 6.2,0 t6.2,0 t6.2,0" stroke-width="2" opacity=".7"></path><path d="M1.8,17.6 q3.1,-3.2 6.2,0 t6.2,0 t6.2,0" stroke-width="2" opacity=".45"></path></symbol>
+  <symbol id="g-skull" viewBox="0 0 24 24"><path d="M6,11.4 A6,6 0 0 1 18,11.4 V15.4 L15,17.4 V20.4 H9 V17.4 L6,15.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M6,11.4 A6,6 0 0 1 18,11.4 V15.4 L15,17.4 V20.4 H9 V17.4 L6,15.4 Z"></path><circle cx="9.5" cy="12.2" r="1.5" fill="currentColor" stroke="none"></circle><circle cx="14.5" cy="12.2" r="1.5" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-beast" viewBox="0 0 24 24"><path d="M12,20.4 C7.4,20.4 4.2,16.8 4.2,12.6 C4.2,9.4 7.4,7.2 12,7.2 C16.6,7.2 19.8,9.4 19.8,12.6 C19.8,16.8 16.6,20.4 12,20.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M4.8,9.4 L6.8,3.6 L10.8,8"></path><path d="M19.2,9.4 L17.2,3.6 L13.2,8"></path><path d="M12,20.4 C7.4,20.4 4.2,16.8 4.2,12.6 C4.2,9.4 7.4,7.2 12,7.2 C16.6,7.2 19.8,9.4 19.8,12.6 C19.8,16.8 16.6,20.4 12,20.4 Z"></path><circle cx="9.4" cy="13" r="1.2" fill="currentColor" stroke="none"></circle><circle cx="14.6" cy="13" r="1.2" fill="currentColor" stroke="none"></circle><path d="M10.2,17 q1.8,1.4 3.6,0"></path></symbol>
+  <symbol id="g-ghost" viewBox="0 0 24 24"><path d="M5,20.4 V11 A7,7 0 0 1 19,11 V20.4 L16.5,18.2 L14,20.4 L12,18.2 L10,20.4 L7.5,18.2 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5,20.4 V11 A7,7 0 0 1 19,11 V20.4 L16.5,18.2 L14,20.4 L12,18.2 L10,20.4 L7.5,18.2 Z"></path><circle cx="9.5" cy="11.4" r="1.4" fill="currentColor" stroke="none"></circle><circle cx="14.5" cy="11.4" r="1.4" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-construct" viewBox="0 0 24 24"><path d="M4,4 H20 V20 H4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M4,4 H20 V20 H4 Z"></path><path d="M8.4,8.4 H15.6 V15.6 H8.4 Z"></path><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-dragon" viewBox="0 0 24 24"><path d="M12,3.6 L18.4,13.2 H5.6 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M5.6,13.2 L1.6,8.6 L3.8,17.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M18.4,13.2 L22.4,8.6 L20.2,17.4 Z" fill="currentColor" opacity=".2" stroke="none"></path><path d="M12,3.6 L18.4,13.2 H5.6 Z"></path><path d="M5.6,13.2 L1.6,8.6 L3.8,17.4 Z"></path><path d="M18.4,13.2 L22.4,8.6 L20.2,17.4 Z"></path><path d="M12,13.2 V20.4"></path></symbol>
+  <symbol id="g-bandit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="12" cy="12" r="8.2"></circle><path d="M4.4,10.2 H19.6 V13.8 H4.4 Z" fill="currentColor" stroke="none"></path><path d="M9,17 q3,1.6 6,0"></path></symbol>
+  <symbol id="g-rat" viewBox="0 0 24 24"><circle cx="13" cy="13.6" r="6" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="8" cy="7.8" r="2.8" fill="currentColor" opacity=".2" stroke="none"></circle><circle cx="13" cy="13.6" r="6"></circle><circle cx="8" cy="7.8" r="2.8"></circle><path d="M19.2,15.6 q4.2,1 2.2,5.2"></path><circle cx="10.4" cy="11.6" r="1" fill="currentColor" stroke="none"></circle></symbol>
+  <symbol id="g-check" viewBox="0 0 24 24"><path d="M4.6,12.8 L9.8,18.2 L19.4,6.6" stroke-width="2.6"></path></symbol>
+  <symbol id="g-chevron" viewBox="0 0 24 24"><path d="M9,5 L16,12 L9,19"></path></symbol>
+</defs></svg>
+
+<div id="app">
+  <div id="toastwrap"></div>
+
+  <div id="statusbar">
+    <div id="statustop">
+      <button id="herobtn" onclick="openHero()">
+        <span class="avatar ch-hud-avatar"><svg class="glyph" viewBox="0 0 24 24" style="width:19px;height:19px;"><use href="#g-hero"></use></svg></span>
+        <span class="who">
+          <span class="namerow"><span id="playername">Adventurer</span><span class="chev"><svg viewBox="0 0 24 24"><use href="#g-chevron"></use></svg></span></span>
+          <span id="substat"><span id="cblevel" class="mono">CB 1</span><span id="curloc">The Hollow of Thornwake</span></span>
+        </span>
+      </button>
+      <div id="hudright">
+        <div id="goldstat"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-coin"></use></svg><span><span id="goldlabel">GOLD</span><br><span id="goldval">0</span></span></div>
+        <button id="sfxbtn" onclick="toggleSfxMuted()" aria-label="Toggle sound effects"></button>
+      </div>
+    </div>
+    <div class="hud-bars">
+      <div class="hud-bar-row">
+        <span class="hud-bar-label">HP</span>
+        <div class="hud-hp-track bar-trough"><div class="bar-fill f-hp" id="hpfill" style="width:100%"><div class="bar-sheen"></div></div><div class="hud-hp-text" id="hptext">20/20</div></div>
+      </div>
+      <div class="hud-bar-row">
+        <span class="hud-bar-label">XP</span>
+        <div class="hud-xp-track bar-trough"><div class="bar-fill f-xp" id="xpfill" style="width:0%"><div class="bar-sheen"></div></div></div>
+      </div>
+    </div>
+    <div class="rivet-row"><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span><span class="rivet"></span></div>
+  </div>
+
+  <div id="heroheader">
+    <button id="herobackbtn" class="ch-tile" onclick="closeHero()"><svg viewBox="0 0 24 24"><path d="M15,5 L8,12 L15,19"></path></svg></button>
+    <div>
+      <div class="title">The Hero's Ledger</div>
+      <div class="sub mono" id="herosub">ADVENTURER · COMBAT LV 1</div>
+    </div>
+  </div>
+
+  <div id="activitybar"></div>
+
+  <div id="content">
+
+    <!-- TOWN -->
+    <div class="screen active" id="screen-town">
+      <div class="section-header"><span class="diamond"></span><span class="label">The Hollow of Thornwake</span><span class="rule"></span></div>
+      <div class="card card--neutral">
+        <p class="location-blurb">A moss-worn waystation at the edge of the deep woods. Rest here between ventures &mdash; your wounds mend fully whenever you return.</p>
+        <button class="btn btn-leaf btn-block ch-btn" onclick="restAtTown()">Rest &amp; Heal</button>
+      </div>
+      <div class="section-header"><span class="diamond"></span><span class="label">Your Skills</span><span class="rule"></span></div>
+      <div id="townskills"></div>
+    </div>
+
+    <!-- HERO SHEET -->
+    <div class="screen" id="screen-hero">
+      <div class="portrait-row">
+        <div class="hero-portrait ch-tile-lg">
+          <div class="floorwash"></div>
+          <div class="heroglyph"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-hero"></use></svg></div>
+          <div class="slot-tl" id="hero-weapon-glyph"></div>
+          <div class="slot-tr" id="hero-armor-glyph"><svg class="glyph" viewBox="0 0 24 24" style="stroke-dasharray:2 2;"><use href="#g-shield"></use></svg></div>
+          <div class="hp-scrim">
+            <div class="hp-label">HP</div>
+            <div class="bar-trough" style="height:9px;"><div class="bar-fill f-hp" id="hero-hpfill"><div class="bar-sheen"></div></div></div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-card atk">
+            <div class="txt"><div class="lbl">ATTACK</div><div class="val" id="hero-atk">0</div><div class="deriv" id="hero-atk-deriv"></div></div>
+            <svg class="icon glyph" viewBox="0 0 24 24"><use href="#g-sword"></use></svg>
+          </div>
+          <div class="stat-card def">
+            <div class="txt"><div class="lbl">DEFENCE</div><div class="val" id="hero-def">0</div><div class="deriv" id="hero-def-deriv"></div></div>
+            <svg class="icon glyph" viewBox="0 0 24 24"><use href="#g-shield"></use></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header"><span class="diamond"></span><span class="label">Carried</span><span class="rule"></span></div>
+      <div class="carried-row" id="hero-carried"></div>
+
+      <div class="section-header"><span class="diamond"></span><span class="label">Ledger of Skills</span><span class="rule"></span></div>
+      <div class="ledger" id="hero-ledger"></div>
+
+      <div class="stat-tiles" id="hero-tiles"></div>
+    </div>
+
+    <!-- TRAVEL -->
+    <div class="screen" id="screen-travel">
+      <div class="section-header"><span class="diamond"></span><span class="label">The Map of Thornwake</span><span class="rule"></span></div>
+      <div class="map-wrap" id="travelmap"></div>
+      <div id="travelbanner"></div>
+
+      <div id="travel-gather-wrap" style="display:none;">
+        <div id="travelgathercontent"></div>
+      </div>
+
+      <div id="travel-combat-wrap" style="display:none;">
+        <div id="combat-select">
+          <div id="monsterlist"></div>
+        </div>
+        <div id="combat-fight" style="display:none;">
+          <div class="vs-wrap">
+            <div class="fighter" id="fighter-player">
+              <div class="fighter-portrait ch-avatar"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-hero"></use></svg></div>
+              <div class="fighter-name">You</div>
+              <div class="bar-trough" style="height:11px; margin-top:6px;"><div class="bar-fill f-hp" id="fhpfill-p"></div></div>
+            </div>
+            <div class="vs-mark">VS</div>
+            <div class="fighter enemy" id="fighter-enemy">
+              <div class="fighter-portrait ch-avatar"><svg class="glyph" id="enemy-glyph" viewBox="0 0 24 24"><use href="#g-beast"></use></svg></div>
+              <div class="fighter-name" id="enemy-name">&mdash;</div>
+              <div class="bar-trough" style="height:11px; margin-top:6px;"><div class="bar-fill f-hp" id="fhpfill-e"></div></div>
+            </div>
+          </div>
+          <div class="combat-log" id="combatlog"></div>
+          <div class="action-row">
+            <button class="btn btn-blood btn-sweep flex2 ch-btn" id="attackbtn" onclick="playerAttack()">Auto-Attack</button>
+            <button class="btn btn-leaf-soft flex1 ch-btn" onclick="eatDuringCombat()">Eat</button>
+            <button class="btn btn-ghost flex1 ch-btn" onclick="fleeCombat()">Flee</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEARTH (cook + smith) -->
+    <div class="screen" id="screen-cook">
+      <div class="section-header"><span class="diamond"></span><span class="label">The Hearth</span><span class="rule"></span></div>
+      <div id="cookcontent"></div>
+      <div id="emberforgewrap"></div>
+    </div>
+
+    <!-- SHOP -->
+    <div class="screen" id="screen-shop">
+      <div class="subtabs">
+        <div class="subtab active" data-shoptab="buy" onclick="setShopTab('buy')">Buy Gear</div>
+        <div class="subtab" data-shoptab="sell" onclick="setShopTab('sell')">Sell Goods</div>
+      </div>
+      <div id="shopcontent"></div>
+    </div>
+
+    <!-- QUESTS -->
+    <div class="screen" id="screen-quests">
+      <div class="section-header"><span class="diamond"></span><span class="label" id="questheader">The Board</span><span class="rule"></span></div>
+      <div id="questcontent"></div>
+    </div>
+
+    <!-- SATCHEL -->
+    <div class="screen" id="screen-inv">
+      <div class="section-header"><span class="diamond"></span><span class="label">Satchel</span><span class="rule"></span></div>
+      <div id="invcontent"></div>
+      <div class="section-header"><span class="diamond"></span><span class="label">Worn</span><span class="rule"></span></div>
+      <div id="equipcontent"></div>
+    </div>
+
+  </div>
+
+  <div id="nav">
+    <button class="navbtn active" data-screen="town" onclick="setScreen('town')"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-house"></use></svg>Town</button>
+    <button class="navbtn" data-screen="travel" onclick="setScreen('travel')"><span class="navdot" id="traveldot"></span><svg class="glyph" viewBox="0 0 24 24"><use href="#g-map"></use></svg>Travel</button>
+    <button class="navbtn" data-screen="cook" onclick="setScreen('cook')"><span class="navdot" id="cookdot"></span><svg class="glyph" viewBox="0 0 24 24"><use href="#g-flame"></use></svg>Hearth</button>
+    <button class="navbtn" data-screen="shop" onclick="setScreen('shop')"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-stall"></use></svg>Stall</button>
+    <button class="navbtn" data-screen="quests" onclick="setScreen('quests')"><span class="navdot" id="questdot"></span><svg class="glyph" viewBox="0 0 24 24"><use href="#g-scroll"></use></svg>Quests</button>
+    <button class="navbtn" data-screen="inv" onclick="setScreen('inv')"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-bag"></use></svg>Bag</button>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
