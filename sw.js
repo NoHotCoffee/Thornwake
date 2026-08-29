@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'thornwake-v1';
+const CACHE_VERSION = 'thornwake-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -24,33 +24,18 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// App shell files: cache-first (instant load, works fully offline).
-// Everything else (e.g. Google Fonts): network-first, falling back to cache.
+// Network-first, falling back to cache: whatever is live on the server wins whenever
+// there's a connection, so a new push shows up on next load instead of being stuck
+// behind a stale cache. The cache is only what keeps the game playable offline.
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
 
-  const url = new URL(req.url);
-  const isSameOrigin = url.origin === self.location.origin;
-
-  if (isSameOrigin) {
-    event.respondWith(
-      caches.match(req).then((cached) => {
-        if (cached) return cached;
-        return fetch(req).then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then((cache) => cache.put(req, copy));
-          return res;
-        }).catch(() => cached);
-      })
-    );
-  } else {
-    event.respondWith(
-      fetch(req).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE_VERSION).then((cache) => cache.put(req, copy));
-        return res;
-      }).catch(() => caches.match(req))
-    );
-  }
+  event.respondWith(
+    fetch(req).then((res) => {
+      const copy = res.clone();
+      caches.open(CACHE_VERSION).then((cache) => cache.put(req, copy));
+      return res;
+    }).catch(() => caches.match(req).then((cached) => cached || caches.match('./index.html')))
+  );
 });
