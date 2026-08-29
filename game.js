@@ -18,6 +18,24 @@ function xpProgress(xp){
   return {lvl, pct: Math.floor(((xp-base)/(next-base))*100), cur: xp-base, need: next-base};
 }
 
+/* Combat levels on their own, gentler curve — the shared skills curve made high-level
+   combat leveling take hundreds of kills per level, which felt broken rather than epic. */
+const COMBAT_XP_K = 15, COMBAT_XP_P = 1.355;
+function xpForCombatLevel(lvl){ return Math.floor(COMBAT_XP_K * Math.pow(lvl, COMBAT_XP_P)); }
+const COMBAT_LEVEL_TOTALS = [0];
+for(let l=1; l<=99; l++){ COMBAT_LEVEL_TOTALS.push(COMBAT_LEVEL_TOTALS[l-1] + xpForCombatLevel(l)); }
+function combatLevelFromTotalXp(xp){
+  let lvl = 1;
+  for(let l=1; l<=99; l++){ if(xp >= COMBAT_LEVEL_TOTALS[l]) lvl = l+1; else break; }
+  return Math.min(lvl, 99);
+}
+function xpProgressCombat(xp){
+  const lvl = combatLevelFromTotalXp(xp);
+  if(lvl >= 99) return {lvl, pct:100, cur:0, need:0};
+  const base = COMBAT_LEVEL_TOTALS[lvl-1], next = COMBAT_LEVEL_TOTALS[lvl];
+  return {lvl, pct: Math.floor(((xp-base)/(next-base))*100), cur: xp-base, need: next-base};
+}
+
 const RESOURCE_ITEMS = {
   birchLog:{name:'Birch Log', icon:'log'}, oakLog:{name:'Oak Log', icon:'log'},
   willowLog:{name:'Willow Log', icon:'log'}, yewLog:{name:'Yew Log', icon:'log'},
@@ -37,6 +55,14 @@ const RESOURCE_ITEMS = {
   copperBar:{name:'Copper Bar', icon:'bar'}, ironBar:{name:'Iron Bar', icon:'bar'},
   silverBar:{name:'Silver Bar', icon:'bar'}, goldBar:{name:'Gold Bar', icon:'bar'},
   mythrilBar:{name:'Mythril Bar', icon:'bar'}, adamantBar:{name:'Adamant Bar', icon:'bar'},
+  curio:{name:'Tarnished Locket', icon:'coin'},
+  ratTail:{name:'Rat Tail', icon:'rat'},
+  beastPelt:{name:'Beast Pelt', icon:'beast'},
+  boneShard:{name:'Bone Shard', icon:'skull'},
+  ectoplasm:{name:'Ectoplasm', icon:'ghost'},
+  banditTrophy:{name:"Bandit's Trophy", icon:'bandit'},
+  gearCog:{name:'Salvaged Cog', icon:'construct'},
+  dragonscale:{name:'Dragonscale', icon:'dragon'},
 };
 
 const COOK_RECIPES = [
@@ -58,24 +84,25 @@ const SMELT_RECIPES = [
 ];
 
 const MONSTERS = [
-  {id:'rat', name:'Field Rat', icon:'rat', reqLevel:1, maxHp:9, dmgMin:1,dmgMax:2, xp:4, goldMin:1,goldMax:3},
-  {id:'goblin', name:'Forest Goblin', icon:'beast', reqLevel:5, maxHp:20, dmgMin:2,dmgMax:4, xp:10, goldMin:3,goldMax:8},
-  {id:'skeleton', name:'Cave Skeleton', icon:'skull', reqLevel:10, maxHp:35, dmgMin:3,dmgMax:6, xp:18, goldMin:6,goldMax:14},
-  {id:'troll', name:'Bog Troll', icon:'beast', reqLevel:20, maxHp:60, dmgMin:5,dmgMax:9, xp:32, goldMin:12,goldMax:25},
-  {id:'golem', name:'Iron Golem', icon:'construct', reqLevel:35, maxHp:100, dmgMin:8,dmgMax:14, xp:55, goldMin:25,goldMax:45},
-  {id:'wraith', name:'Dread Wraith', icon:'ghost', reqLevel:50, maxHp:160, dmgMin:12,dmgMax:20, xp:90, goldMin:45,goldMax:80},
-  {id:'millrat', name:'Mill Rat', icon:'rat', reqLevel:1, maxHp:10, dmgMin:1,dmgMax:2, xp:4, goldMin:1,goldMax:3},
-  {id:'graveWisp', name:'Grave Wisp', icon:'ghost', reqLevel:15, maxHp:30, dmgMin:3,dmgMax:5, xp:16, goldMin:5,goldMax:10},
-  {id:'restlessSpirit', name:'Restless Spirit', icon:'ghost', reqLevel:25, maxHp:55, dmgMin:4,dmgMax:8, xp:30, goldMin:10,goldMax:20},
-  {id:'bandit', name:'Bandit', icon:'bandit', reqLevel:35, maxHp:85, dmgMin:6,dmgMax:11, xp:48, goldMin:18,goldMax:32},
-  {id:'banditCaptain', name:'Bandit Captain', icon:'bandit', reqLevel:45, maxHp:130, dmgMin:9,dmgMax:15, xp:70, goldMin:30,goldMax:55},
-  {id:'cryptGhoul', name:'Crypt Ghoul', icon:'ghost', reqLevel:55, maxHp:180, dmgMin:11,dmgMax:18, xp:95, goldMin:40,goldMax:70},
-  {id:'cryptWarden', name:'Crypt Warden', icon:'construct', reqLevel:60, maxHp:320, dmgMin:16,dmgMax:26, xp:180, goldMin:100,goldMax:160},
-  {id:'frostWight', name:'Frost Wight', icon:'skull', reqLevel:65, maxHp:250, dmgMin:14,dmgMax:22, xp:140, goldMin:70,goldMax:110},
-  {id:'revenant', name:'Revenant', icon:'ghost', reqLevel:75, maxHp:380, dmgMin:18,dmgMax:28, xp:210, goldMin:110,goldMax:170},
-  {id:'ashDrake', name:'Ash Drake', icon:'dragon', reqLevel:90, maxHp:550, dmgMin:24,dmgMax:38, xp:340, goldMin:180,goldMax:260},
-  {id:'infernoLord', name:'Inferno Lord', icon:'dragon', reqLevel:99, maxHp:750, dmgMin:30,dmgMax:48, xp:480, goldMin:260,goldMax:400},
+  {id:'rat', name:'Field Rat', icon:'rat', reqLevel:1, maxHp:9, dmgMin:1,dmgMax:2, xp:4, goldMin:1,goldMax:3, drop:'ratTail'},
+  {id:'goblin', name:'Forest Goblin', icon:'beast', reqLevel:5, maxHp:20, dmgMin:2,dmgMax:4, xp:10, goldMin:3,goldMax:8, drop:'beastPelt'},
+  {id:'skeleton', name:'Cave Skeleton', icon:'skull', reqLevel:10, maxHp:35, dmgMin:3,dmgMax:6, xp:18, goldMin:6,goldMax:14, drop:'boneShard'},
+  {id:'troll', name:'Bog Troll', icon:'beast', reqLevel:20, maxHp:60, dmgMin:5,dmgMax:9, xp:32, goldMin:12,goldMax:25, drop:'beastPelt'},
+  {id:'golem', name:'Iron Golem', icon:'construct', reqLevel:35, maxHp:100, dmgMin:8,dmgMax:14, xp:55, goldMin:25,goldMax:45, drop:'gearCog'},
+  {id:'wraith', name:'Dread Wraith', icon:'ghost', reqLevel:50, maxHp:160, dmgMin:12,dmgMax:20, xp:90, goldMin:45,goldMax:80, drop:'ectoplasm'},
+  {id:'millrat', name:'Mill Rat', icon:'rat', reqLevel:1, maxHp:10, dmgMin:1,dmgMax:2, xp:4, goldMin:1,goldMax:3, drop:'ratTail'},
+  {id:'graveWisp', name:'Grave Wisp', icon:'ghost', reqLevel:15, maxHp:30, dmgMin:3,dmgMax:5, xp:16, goldMin:5,goldMax:10, drop:'ectoplasm'},
+  {id:'restlessSpirit', name:'Restless Spirit', icon:'ghost', reqLevel:25, maxHp:55, dmgMin:4,dmgMax:8, xp:30, goldMin:10,goldMax:20, drop:'ectoplasm'},
+  {id:'bandit', name:'Bandit', icon:'bandit', reqLevel:35, maxHp:85, dmgMin:6,dmgMax:11, xp:48, goldMin:18,goldMax:32, drop:'banditTrophy'},
+  {id:'banditCaptain', name:'Bandit Captain', icon:'bandit', reqLevel:45, maxHp:130, dmgMin:9,dmgMax:15, xp:70, goldMin:30,goldMax:55, drop:'banditTrophy'},
+  {id:'cryptGhoul', name:'Crypt Ghoul', icon:'ghost', reqLevel:55, maxHp:180, dmgMin:11,dmgMax:18, xp:95, goldMin:40,goldMax:70, drop:'ectoplasm'},
+  {id:'cryptWarden', name:'Crypt Warden', icon:'construct', reqLevel:60, maxHp:320, dmgMin:16,dmgMax:26, xp:180, goldMin:100,goldMax:160, drop:'gearCog'},
+  {id:'frostWight', name:'Frost Wight', icon:'skull', reqLevel:65, maxHp:250, dmgMin:14,dmgMax:22, xp:140, goldMin:70,goldMax:110, drop:'boneShard'},
+  {id:'revenant', name:'Revenant', icon:'ghost', reqLevel:75, maxHp:380, dmgMin:18,dmgMax:28, xp:210, goldMin:110,goldMax:170, drop:'ectoplasm'},
+  {id:'ashDrake', name:'Ash Drake', icon:'dragon', reqLevel:90, maxHp:550, dmgMin:24,dmgMax:38, xp:340, goldMin:180,goldMax:260, drop:'dragonscale'},
+  {id:'infernoLord', name:'Inferno Lord', icon:'dragon', reqLevel:99, maxHp:750, dmgMin:30,dmgMax:48, xp:480, goldMin:260,goldMax:400, drop:'dragonscale'},
 ];
+const MONSTER_DROP_CHANCE = 0.3;
 
 const WEAPONS = [
   {id:'rustySword', name:'Rusty Sword', reqLevel:1, atk:2, cost:40},
@@ -99,6 +126,8 @@ const SELL_PRICES = {
   copperOre:3, ironOre:7, silverOre:15, goldOre:30, mythrilOre:55, adamantOre:85,
   minnow:2, trout:5, bass:10, sturgeon:20, eel:35, leviathan:55,
   copperBar:8, ironBar:18, silverBar:32, goldBar:55, mythrilBar:90, adamantBar:140,
+  curio:25,
+  ratTail:3, beastPelt:10, boneShard:16, ectoplasm:30, banditTrophy:45, gearCog:60, dragonscale:150,
 };
 const SKILL_LABELS = { woodcutting:'Woodcutting', mining:'Mining', fishing:'Fishing', smithing:'Smithing' };
 const SKILL_DEFS = [
@@ -223,14 +252,14 @@ function defaultState(){
     createdAt: Date.now(),
   };
 }
-function maxHp(){ const lvl = xpProgress(state.combatXp).lvl; return 20 + lvl*4; }
+function maxHp(){ const lvl = xpProgressCombat(state.combatXp).lvl; return 20 + lvl*4; }
 function atkStat(){
-  const lvl = xpProgress(state.combatXp).lvl;
+  const lvl = xpProgressCombat(state.combatXp).lvl;
   const w = WEAPONS.find(w=>w.id===state.equipment.weapon);
   return lvl + (w?w.atk:0);
 }
 function defStat(){
-  const lvl = xpProgress(state.combatXp).lvl;
+  const lvl = xpProgressCombat(state.combatXp).lvl;
   const a = ARMORS.find(a=>a.id===state.equipment.armor);
   return Math.floor(lvl/2) + (a?a.def:0);
 }
@@ -310,6 +339,14 @@ function showToast(msg){
   wrap.appendChild(t);
   setTimeout(()=>t.remove(), 2500);
 }
+function showEventToast(msg){
+  const wrap = document.getElementById('toastwrap');
+  const t = document.createElement('div');
+  t.className = 'toast event';
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(()=>t.remove(), 3200);
+}
 function floatText(container, text, color){
   const f = document.createElement('div');
   f.className = 'floater';
@@ -335,13 +372,87 @@ function grantXp(skillKey, amount, label){
   const before = xpProgress(state.skills[skillKey]).lvl;
   state.skills[skillKey] += amount;
   const after = xpProgress(state.skills[skillKey]).lvl;
-  if(after > before) showToast(`${label} level up — now level ${after}`);
+  if(after > before){ showToast(`${label} level up — now level ${after}`); sfx.levelUp(); }
 }
 function grantCombatXp(amount){
-  const before = xpProgress(state.combatXp).lvl;
+  const before = xpProgressCombat(state.combatXp).lvl;
   state.combatXp += amount;
-  const after = xpProgress(state.combatXp).lvl;
-  if(after > before) showToast(`Combat level up — now level ${after}`);
+  const after = xpProgressCombat(state.combatXp).lvl;
+  if(after > before){ showToast(`Combat level up — now level ${after}`); sfx.levelUp(); }
+}
+
+/* ============================ SFX (synthesized — no audio files needed) ============================ */
+let audioCtx = null;
+let sfxMuted = (function(){ try{ return localStorage.getItem('thornwake-sfx-muted') === '1'; }catch(e){ return false; } })();
+function ensureAudio(){
+  if(!audioCtx){
+    try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+    catch(e){ return null; }
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+document.addEventListener('pointerdown', ensureAudio, { once:true, passive:true });
+
+function tone(freq, start, dur, type, peak, glideTo){
+  const ctx = ensureAudio();
+  if(!ctx || sfxMuted) return;
+  const t0 = ctx.currentTime + start;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, t0);
+  if(glideTo) osc.frequency.exponentialRampToValueAtTime(Math.max(1,glideTo), t0+dur);
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.linearRampToValueAtTime(peak||0.16, t0+0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(t0);
+  osc.stop(t0+dur+0.03);
+}
+function noiseBurst(start, dur, peak){
+  const ctx = ensureAudio();
+  if(!ctx || sfxMuted) return;
+  const t0 = ctx.currentTime + start;
+  const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * dur));
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for(let i=0;i<bufferSize;i++){ data[i] = (Math.random()*2-1) * (1 - i/bufferSize); }
+  const src = ctx.createBufferSource();
+  src.buffer = buffer;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(peak||0.14, t0);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass'; filter.frequency.value = 2200;
+  src.connect(filter).connect(gain).connect(ctx.destination);
+  src.start(t0);
+}
+const sfx = {
+  hit(){ tone(180,0,0.09,'square',0.15,90); noiseBurst(0,0.05,0.07); },
+  hurt(){ tone(110,0,0.14,'sawtooth',0.13,55); },
+  victory(){ tone(440,0,0.1,'triangle',0.15); tone(554,0.09,0.1,'triangle',0.15); tone(659,0.18,0.24,'triangle',0.17); },
+  defeat(){ tone(220,0,0.18,'sawtooth',0.15,110); tone(160,0.15,0.32,'sawtooth',0.13,85); },
+  levelUp(){ tone(523,0,0.09,'triangle',0.15); tone(659,0.08,0.09,'triangle',0.15); tone(784,0.16,0.09,'triangle',0.15); tone(1047,0.24,0.3,'triangle',0.19); },
+  coin(){ tone(880,0,0.05,'square',0.11); tone(1318,0.04,0.09,'square',0.11); },
+  quest(){ tone(392,0,0.09,'triangle',0.14); tone(587,0.08,0.18,'triangle',0.16); },
+  event(){ tone(660,0,0.07,'sine',0.13); tone(990,0.06,0.07,'sine',0.13); tone(1320,0.12,0.16,'sine',0.14); },
+  rest(){ tone(330,0,0.12,'sine',0.11); tone(440,0.1,0.2,'sine',0.11); },
+  flee(){ tone(300,0,0.1,'sawtooth',0.1,150); },
+};
+const SFX_ICON_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4,10 H8 L13,5 V19 L8,14 H4 Z"></path><path d="M16.5,8.5 Q19.5,12 16.5,15.5"></path><path d="M19,6 Q23.5,12 19,18"></path></svg>';
+const SFX_ICON_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4,10 H8 L13,5 V19 L8,14 H4 Z"></path><path d="M16.5,9 L21.5,15 M21.5,9 L16.5,15"></path></svg>';
+function updateSfxButton(){
+  const btn = document.getElementById('sfxbtn');
+  if(!btn) return;
+  btn.innerHTML = sfxMuted ? SFX_ICON_OFF : SFX_ICON_ON;
+  btn.classList.toggle('muted', sfxMuted);
+}
+function toggleSfxMuted(){
+  sfxMuted = !sfxMuted;
+  try{ localStorage.setItem('thornwake-sfx-muted', sfxMuted?'1':'0'); }catch(e){}
+  updateSfxButton();
+  if(!sfxMuted){ ensureAudio(); sfx.event(); }
 }
 
 /* ============================ NAV ============================ */
@@ -384,7 +495,7 @@ function updateAppBg(){
 
 /* ============================ RENDER: STATUS BAR ============================ */
 function renderStatus(){
-  const cb = xpProgress(state.combatXp);
+  const cb = xpProgressCombat(state.combatXp);
   document.getElementById('playername').textContent = state.name || 'Adventurer';
   document.getElementById('cblevel').textContent = `CB ${cb.lvl}`;
   document.getElementById('curloc').textContent = state.location && LOCATIONS[state.location] ? LOCATIONS[state.location].name : 'The Hollow of Thornwake';
@@ -441,7 +552,7 @@ function renderActivityBar(){
 /* ============================ RENDER: TOWN ============================ */
 function renderTown(){
   const wrap = document.getElementById('townskills');
-  const cb = xpProgress(state.combatXp);
+  const cb = xpProgressCombat(state.combatXp);
   let html = `<div class="card card--combat card-row ${cb.pct>=90?'card--near-max':''}">
     ${ringSvg(cb.pct,'sword',cb.lvl,'--sk-combat','--sk-combat-l')}
     <div class="card-info">
@@ -462,8 +573,10 @@ function renderTown(){
   wrap.innerHTML = html;
 }
 function restAtTown(){
+  if(fight){ showToast("Can't rest with a fight still underway"); return; }
   state.hp = maxHp();
   showToast('Fully rested');
+  sfx.rest();
   queueSave();
   renderAll();
 }
@@ -492,7 +605,7 @@ function equipSlotHTML(slot, large){
   return `<div class="worn-slot empty"><div class="worn-tile">${icon(glyphId)}</div><div class="name">Empty</div></div>`;
 }
 function renderHero(){
-  const cb = xpProgress(state.combatXp);
+  const cb = xpProgressCombat(state.combatXp);
   document.getElementById('herosub').textContent = `ADVENTURER · COMBAT LV ${cb.lvl}`;
   const mh = maxHp();
   document.getElementById('hero-hpfill').style.width = Math.max(0,state.hp/mh*100)+'%';
@@ -682,20 +795,19 @@ function renderTravel(){
   const loc = LOCATIONS[state.location];
   banner.innerHTML = `<div class="location-banner"><div class="lb-title">${icon(loc.icon)} ${loc.name}</div><div class="lb-desc">${loc.desc}</div></div>`;
 
-  gatherWrap.style.display = loc.type==='gather' ? '' : 'none';
-  combatWrap.style.display = loc.type==='combat' ? '' : 'none';
+  gatherWrap.style.display = (loc.type==='gather' && !fight) ? '' : 'none';
+  combatWrap.style.display = (loc.type==='combat' || fight) ? '' : 'none';
 
-  if(loc.type === 'gather'){
+  if(fight){
+    // a wandering-monster ambush can interrupt gathering, not just a combat location
+    document.getElementById('combat-select').style.display = 'none';
+    document.getElementById('combat-fight').style.display = '';
+  } else if(loc.type === 'gather'){
     renderTravelGather();
   } else {
-    if(fight){
-      document.getElementById('combat-select').style.display = 'none';
-      document.getElementById('combat-fight').style.display = '';
-    } else {
-      document.getElementById('combat-select').style.display = '';
-      document.getElementById('combat-fight').style.display = 'none';
-      renderMonsterList();
-    }
+    document.getElementById('combat-select').style.display = '';
+    document.getElementById('combat-fight').style.display = 'none';
+    renderMonsterList();
   }
 }
 function renderTravelGather(){
@@ -754,6 +866,8 @@ function tickGather(){
     addItem(node.item, 1);
     grantXp(gatherAction.skillKey, node.xp, SKILL_LABELS[gatherAction.skillKey]);
     queueSave();
+    maybeRandomEvent('gather', { item: node.item, xp: node.xp, skillKey: gatherAction.skillKey });
+    if(!gatherAction) return; // an ambush can end the gather action mid-tick
     gatherAction.startedAt = performance.now();
     if(currentScreen==='town') renderTown();
     if(currentScreen==='inv') renderInventory();
@@ -820,6 +934,7 @@ function tickCook(){
     addItem(cookAction.cooked, 1);
     grantXp('cooking', cookAction.xp, 'Cooking');
     queueSave();
+    maybeRandomEvent('cook', { cooked: cookAction.cooked, xp: cookAction.xp });
     if(invCount(cookAction.raw) < 1){ stopCook(true); return; }
     cookAction.startedAt = performance.now();
     if(currentScreen==='town') renderTown();
@@ -912,8 +1027,10 @@ function tickSmelt(){
     addItem(smithAction.bar, 1);
     grantXp('smithing', smithAction.xp, 'Smithing');
     queueSave();
+    maybeRandomEvent('smelt', { bar: smithAction.bar, xp: smithAction.xp });
     if(invCount(smithAction.ore) < 1){ stopSmelt(true); return; }
     smithAction.startedAt = performance.now();
+    if(currentScreen==='town') renderTown();
     if(currentScreen==='inv') renderInventory();
     if(currentScreen==='quests') renderQuests();
     if(heroOpen) renderHero();
@@ -932,6 +1049,7 @@ function forgeItem(id, slot){
   state.equipment[slot] = id;
   if(item.forgeXp) grantXp('smithing', item.forgeXp, 'Smithing');
   showToast(`Forged and equipped ${item.name}`);
+  sfx.coin();
   queueSave();
   renderAll();
 }
@@ -941,7 +1059,7 @@ let shopTab = 'buy';
 function setShopTab(t){ shopTab = t; document.querySelectorAll('[data-shoptab]').forEach(b=>b.classList.toggle('active', b.dataset.shoptab===t)); renderShop(); }
 function renderShop(){
   const wrap = document.getElementById('shopcontent');
-  const cb = xpProgress(state.combatXp).lvl;
+  const cb = xpProgressCombat(state.combatXp).lvl;
   if(shopTab==='buy'){
     let html = `<div class="section-header"><span class="diamond"></span><span class="label">Weapons</span><span class="rule"></span></div>`;
     WEAPONS.filter(w=>!w.forgeOnly && !w.questOnly).forEach(w=>{
@@ -998,6 +1116,7 @@ function buyGear(id, slot){
   state.gold -= item.cost;
   state.equipment[slot] = id;
   showToast(`Equipped ${item.name}`);
+  sfx.coin();
   queueSave();
   renderAll();
 }
@@ -1006,6 +1125,7 @@ function sellAll(id){
   if(n<=0) return;
   state.gold += n * SELL_PRICES[id];
   state.inventory[id] = 0;
+  sfx.coin();
   queueSave();
   renderAll();
 }
@@ -1058,9 +1178,17 @@ function eatItem(id){
 
 /* ============================ COMBAT ============================ */
 let fight = null;
+let autoAttackTimer = null;
+function startAutoAttack(){
+  stopAutoAttack();
+  autoAttackTimer = setInterval(()=>{ if(fight && !fight.cooldown) playerAttack(); }, 650);
+}
+function stopAutoAttack(){
+  if(autoAttackTimer){ clearInterval(autoAttackTimer); autoAttackTimer = null; }
+}
 function renderMonsterList(){
   const loc = LOCATIONS[state.location];
-  const cb = xpProgress(state.combatXp).lvl;
+  const cb = xpProgressCombat(state.combatXp).lvl;
   const wrap = document.getElementById('monsterlist');
   const monsters = MONSTERS.filter(m=>loc.monsters.includes(m.id));
   let html = `<div class="section-header"><span class="diamond"></span><span class="label">Also Prowling Here</span><span class="rule"></span></div>`;
@@ -1090,6 +1218,7 @@ function engageMonster(id){
   document.getElementById('combatlog').innerHTML = '';
   logCombat(`A ${m.name} blocks your path.`);
   renderFightBars();
+  startAutoAttack();
 }
 function renderFightBars(){
   const mh = maxHp();
@@ -1112,6 +1241,7 @@ function playerAttack(){
   fight.monsterHp -= dmg;
   logCombat(`You strike the ${fight.monster.name} for ${dmg}.`);
   floatText(document.getElementById('fighter-enemy'), '-'+dmg, '#ffd0b0');
+  sfx.hit();
   renderFightBars();
 
   if(fight.monsterHp <= 0){
@@ -1128,6 +1258,7 @@ function playerAttack(){
     state.hp -= dmg2;
     logCombat(`The ${fight.monster.name} hits you for ${dmg2}.`);
     floatText(document.getElementById('fighter-player'), '-'+dmg2, '#ffd0b0');
+    sfx.hurt();
     fight.cooldown = false;
     renderStatus();
     renderFightBars();
@@ -1136,29 +1267,42 @@ function playerAttack(){
   }, 550);
 }
 function winFight(){
+  stopAutoAttack();
   const m = fight.monster;
   const gold = m.goldMin + Math.floor(Math.random()*(m.goldMax-m.goldMin+1));
   state.gold += gold;
   grantCombatXp(m.xp);
   state.killCounts[m.id] = (state.killCounts[m.id]||0) + 1;
   logCombat(`You defeated the ${m.name}! +${m.xp} xp, +${gold} gold.`);
-  showToast(`Victory — +${gold} gold`);
+  let dropMsg = '';
+  if(m.drop && Math.random() < MONSTER_DROP_CHANCE){
+    addItem(m.drop, 1);
+    const dropName = RESOURCE_ITEMS[m.drop].name;
+    logCombat(`It dropped a ${dropName}.`);
+    dropMsg = ` — found ${dropName}`;
+  }
+  showToast(`Victory — +${gold} gold${dropMsg}`);
+  sfx.victory();
   queueSave();
   fight = null;
   setTimeout(()=>{ renderStatus(); renderTravel(); }, 900);
 }
 function loseFight(){
+  stopAutoAttack();
   const lost = Math.min(state.gold, Math.floor(state.gold*0.1));
   state.gold -= lost;
   state.hp = 1;
   logCombat(`You collapse and stagger back to town, dropping ${lost} gold.`);
   showToast('Defeated — limped back to town');
+  sfx.defeat();
   queueSave();
   fight = null;
   setTimeout(()=>{ setScreen('town'); }, 900);
 }
 function fleeCombat(){
+  stopAutoAttack();
   logCombat('You flee the battle.');
+  sfx.flee();
   fight = null;
   renderTravel();
 }
@@ -1167,6 +1311,67 @@ function eatDuringCombat(){
   if(!foodId){ showToast('No food to eat'); return; }
   eatItem(foodId);
   if(fight) renderFightBars();
+}
+
+/* ============================ RANDOM EVENTS ============================ */
+const RANDOM_EVENT_CHANCE = 0.08; // rolled once per completed gather/cook/smelt tick
+function maybeRandomEvent(kind, ctx){
+  if(Math.random() > RANDOM_EVENT_CHANCE) return;
+  const roll = Math.random();
+  const canAmbush = kind==='gather' && !fight && currentScreen==='travel';
+
+  if(kind === 'gather'){
+    if(canAmbush && roll < 0.18){
+      triggerAmbush();
+      return;
+    } else if(roll < 0.40){
+      const bonus = 1 + Math.floor(Math.random()*3);
+      addItem(ctx.item, bonus);
+      showEventToast(`Lucky find! +${bonus} extra ${RESOURCE_ITEMS[ctx.item].name}`);
+    } else if(roll < 0.58){
+      const bonusXp = Math.max(1, Math.floor(ctx.xp * 0.5));
+      grantXp(ctx.skillKey, bonusXp, SKILL_LABELS[ctx.skillKey]);
+      showEventToast(`A moment of insight — +${bonusXp} bonus xp`);
+    } else if(roll < 0.76){
+      const g = 5 + Math.floor(Math.random()*30);
+      state.gold += g;
+      showEventToast(`You spot a stray coin purse — +${g} gold`);
+    } else if(roll < 0.90){
+      const dmg = Math.min(state.hp-1, 3+Math.floor(Math.random()*6));
+      if(dmg > 0){
+        state.hp -= dmg;
+        renderStatus();
+        showEventToast(`You twist an ankle on loose stone — -${dmg} hp`);
+      }
+    } else {
+      addItem('curio', 1);
+      showEventToast(`Something glints in the dirt — found a Tarnished Locket`);
+    }
+  } else {
+    // cook / smelt: gentler pool, no ambush or injury
+    if(roll < 0.5){
+      const bonusItem = kind==='cook' ? ctx.cooked : ctx.bar;
+      addItem(bonusItem, 1);
+      showEventToast(`Perfect batch — bonus ${RESOURCE_ITEMS[bonusItem].name}!`);
+    } else {
+      const bonusXp = Math.max(1, Math.floor(ctx.xp * 0.5));
+      const skillKey = kind==='cook' ? 'cooking' : 'smithing';
+      grantXp(skillKey, bonusXp, SKILL_LABELS[skillKey]);
+      showEventToast(`You work the ${kind==='cook'?'flame':'forge'} just right — +${bonusXp} bonus xp`);
+    }
+  }
+  sfx.event();
+  queueSave();
+}
+function triggerAmbush(){
+  const cb = xpProgressCombat(state.combatXp).lvl;
+  const candidates = MONSTERS.filter(m=>m.reqLevel <= cb+3).sort((a,b)=>b.reqLevel-a.reqLevel);
+  const m = candidates[0] || MONSTERS.find(m=>m.id==='rat');
+  stopGather(false);
+  showEventToast(`A ${m.name} ambushes you from the brush!`);
+  sfx.event();
+  engageMonster(m.id);
+  renderTravel();
 }
 
 /* ============================ QUESTS ============================ */
@@ -1202,6 +1407,7 @@ function acceptQuest(id){
   const startKill = q.objective.type==='kill' ? (state.killCounts[q.objective.monster]||0) : 0;
   state.questState[id] = { status:'active', startKill };
   showToast(`Quest accepted: ${q.name}`);
+  sfx.quest();
   queueSave();
   renderAll();
 }
@@ -1224,6 +1430,7 @@ function turnInQuest(id){
   state.completedQuests.push(id);
   state.questState[id] = { status:'complete' };
   showToast(`Quest complete: ${q.name}`);
+  sfx.quest();
   if(r.text) setTimeout(()=>showToast(r.text), 900);
   queueSave();
   renderAll();
@@ -1299,6 +1506,7 @@ function renderAll(){
 (async function init(){
   await loadGame();
   renderAll();
+  updateSfxButton();
   if('serviceWorker' in navigator){
     window.addEventListener('load', ()=>{
       navigator.serviceWorker.register('sw.js').catch(()=>{});

@@ -98,8 +98,13 @@ button{font:inherit;}
 #substat{display:flex; align-items:center; gap:6px; margin-top:2px;}
 #cblevel{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:9px; letter-spacing:.1em; color:#241c04; background:var(--chip-neutral); padding:1px 5px;}
 #curloc{font-size:10.5px; text-transform:uppercase; color:var(--t-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+#hudright{display:flex; align-items:center; flex-shrink:0;}
 #goldstat{display:flex; align-items:center; gap:6px; padding-left:10px; border-left:1px solid var(--b-subtle); flex-shrink:0;}
 #goldstat .glyph{width:15px;height:15px;color:var(--gold);}
+#sfxbtn{background:none; border:none; color:var(--t-dim); width:26px; height:26px; margin-left:8px; padding:0;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+#sfxbtn svg{width:17px;height:17px;}
+#sfxbtn.muted{color:var(--t-deepdisabled);}
 #goldlabel{font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.16em; color:var(--t-dim);}
 #goldval{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:16px; color:var(--gold); text-shadow:0 0 10px rgba(255,170,60,.3);}
 .hud-bars{margin-top:8px;}
@@ -395,6 +400,9 @@ button{font:inherit;}
   padding:9px 16px 9px 12px; box-shadow:0 4px 18px rgba(0,0,0,.6), 0 0 22px rgba(255,180,80,.15);
   animation:toastin .3s ease, toastout .3s ease 2.2s forwards; max-width:88%; text-align:center; display:flex; align-items:center; gap:8px;}
 .toast::before{content:''; width:5px; height:5px; background:var(--ember); transform:rotate(45deg); box-shadow:0 0 6px var(--ember); flex-shrink:0;}
+.toast.event{background:#1c2a28ee; border-color:var(--sk-fish); color:var(--sk-fish-l);
+  box-shadow:0 4px 18px rgba(0,0,0,.6), 0 0 22px rgba(99,163,150,.22); animation:toastin .3s ease, toastout .3s ease 2.9s forwards;}
+.toast.event::before{background:var(--sk-fish); box-shadow:0 0 6px var(--sk-fish);}
 @keyframes toastin{from{opacity:0; transform:translateY(-10px) scale(.9);} to{opacity:1; transform:translateY(0) scale(1);}}
 @keyframes toastout{from{opacity:1;} to{opacity:0; transform:translateY(-6px);}}
 
@@ -455,7 +463,10 @@ button{font:inherit;}
           <span id="substat"><span id="cblevel" class="mono">CB 1</span><span id="curloc">The Hollow of Thornwake</span></span>
         </span>
       </button>
-      <div id="goldstat"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-coin"></use></svg><span><span id="goldlabel">GOLD</span><br><span id="goldval">0</span></span></div>
+      <div id="hudright">
+        <div id="goldstat"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-coin"></use></svg><span><span id="goldlabel">GOLD</span><br><span id="goldval">0</span></span></div>
+        <button id="sfxbtn" onclick="toggleSfxMuted()" aria-label="Toggle sound effects"></button>
+      </div>
     </div>
     <div class="hud-bars">
       <div class="hud-bar-row">
@@ -557,7 +568,7 @@ button{font:inherit;}
           </div>
           <div class="combat-log" id="combatlog"></div>
           <div class="action-row">
-            <button class="btn btn-blood btn-sweep flex2 ch-btn" id="attackbtn" onclick="playerAttack()">Attack</button>
+            <button class="btn btn-blood btn-sweep flex2 ch-btn" id="attackbtn" onclick="playerAttack()">Auto-Attack</button>
             <button class="btn btn-leaf-soft flex1 ch-btn" onclick="eatDuringCombat()">Eat</button>
             <button class="btn btn-ghost flex1 ch-btn" onclick="fleeCombat()">Flee</button>
           </div>
