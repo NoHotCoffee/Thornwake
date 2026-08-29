@@ -408,6 +408,28 @@ button{font:inherit;}
 
 .empty-hint{text-align:center; color:var(--t-dim); font-size:12.5px; padding:24px 10px; font-style:italic;}
 
+/* ---- item detail modal ---- */
+.modal-backdrop{position:absolute; inset:0; background:rgba(8,6,4,.72); z-index:200; display:none;
+  align-items:center; justify-content:center; padding:24px;}
+.modal-backdrop.show{display:flex;}
+.modal-card{position:relative; width:100%; max-width:300px; padding:22px 18px 18px; text-align:center;
+  background:linear-gradient(160deg,#453828,#332a1f); border:1px solid #684f30;
+  box-shadow:0 20px 50px rgba(0,0,0,.6); animation:modalin .18s ease;}
+.modal-card::before{display:none;}
+@keyframes modalin{from{opacity:0; transform:translateY(8px) scale(.97);} to{opacity:1; transform:translateY(0) scale(1);}}
+.modal-close{position:absolute; top:8px; right:8px; width:26px; height:26px; background:none; border:none; color:var(--t-dim); padding:0;
+  display:flex; align-items:center; justify-content:center;}
+.modal-close svg{width:15px;height:15px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round;}
+.modal-icon{width:64px; height:64px; margin:0 auto 12px; background:radial-gradient(circle at 35% 30%,#3a2f22,#1c160f);
+  border:1px solid var(--b-default); color:var(--ember-mid); display:flex; align-items:center; justify-content:center;}
+.modal-icon .glyph{width:30px;height:30px;}
+.modal-name{font-family:'Cinzel',serif; font-weight:700; font-size:17px; color:var(--t-heading);}
+.modal-qty{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--t-dim); margin-top:3px;}
+.modal-desc{font-size:13px; color:var(--t-prose); line-height:1.55; margin:12px 0 0;}
+.modal-stats{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--gold); margin-top:10px;}
+.modal-actions{margin-top:16px; display:flex; gap:8px;}
+.modal-actions .btn{flex:1;}
+
 @media (prefers-reduced-motion: reduce){
   .heat-halo, .btn-sweep::before, .map-pulse{animation:none !important;}
 }
@@ -615,6 +637,18 @@ button{font:inherit;}
     <button class="navbtn" data-screen="shop" onclick="setScreen('shop')"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-stall"></use></svg>Stall</button>
     <button class="navbtn" data-screen="quests" onclick="setScreen('quests')"><span class="navdot" id="questdot"></span><svg class="glyph" viewBox="0 0 24 24"><use href="#g-scroll"></use></svg>Quests</button>
     <button class="navbtn" data-screen="inv" onclick="setScreen('inv')"><svg class="glyph" viewBox="0 0 24 24"><use href="#g-bag"></use></svg>Bag</button>
+  </div>
+
+  <div id="itemmodal" class="modal-backdrop" onclick="if(event.target===this) closeItemModal()">
+    <div class="modal-card ch-card">
+      <button class="modal-close" onclick="closeItemModal()"><svg viewBox="0 0 24 24"><path d="M6,6 L18,18 M18,6 L6,18"></path></svg></button>
+      <div class="modal-icon ch-tile" id="modal-icon"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-qty" id="modal-qty"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-stats" id="modal-stats"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
   </div>
 </div>
 

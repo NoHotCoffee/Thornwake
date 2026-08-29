@@ -1140,7 +1140,7 @@ function renderInventory(){
     if(items[i]){
       const [id,n] = items[i];
       const meta = RESOURCE_ITEMS[id];
-      grid += `<div class="item-tile filled ch-tile" onclick="${meta.heal?`eatItem('${id}')`:''}">${icon(meta.icon)}<span class="item-count">${n}</span></div>`;
+      grid += `<div class="item-tile filled ch-tile" onclick="openItemModal('${id}')">${icon(meta.icon)}<span class="item-count">${n}</span></div>`;
     } else {
       grid += `<div class="item-tile empty ch-tile"></div>`;
     }
@@ -1174,6 +1174,54 @@ function eatItem(id){
   showToast(`Ate ${RESOURCE_ITEMS[id].name} (+${heal} hp)`);
   queueSave();
   renderAll();
+}
+
+/* ---- item flavor text, grouped by glyph so every item gets useful copy without 30+ bespoke strings ---- */
+function itemFlavor(id){
+  const meta = RESOURCE_ITEMS[id];
+  if(meta.heal) return 'A cooked meal. Eat it to mend your wounds.';
+  if(id === 'curio') return 'A small trinket turned up by chance. Worth a bit of coin at the Stall — otherwise just a keepsake.';
+  switch(meta.icon){
+    case 'log': return 'Freshly cut timber. Sell it at the Stall, or hold onto it — nothing in Thornwake burns it for crafting yet.';
+    case 'ore': return 'Raw ore. Smelt it into a bar at the Emberforge, or sell it as-is.';
+    case 'fish': return 'A fresh catch, still cold. Cook it at the Hearth to turn it into a meal that mends HP.';
+    case 'bar': return 'A metal bar, smelted and ready. Forge it into weapons or armor at the Emberforge, or sell it.';
+    case 'rat': return "A trophy taken from a fallen vermin. Not much to look at, but it's worth a little gold.";
+    case 'beast': return 'A trophy taken from a fallen beast. Sellable at the Stall.';
+    case 'skull': return 'A bone shard from something that used to move. Sellable at the Stall.';
+    case 'ghost': return 'A wisp of ectoplasm, still faintly cold to the touch. Sellable at the Stall.';
+    case 'bandit': return "A trophy stripped from a defeated bandit. Sellable at the Stall.";
+    case 'construct': return 'A salvaged cog from a broken construct. Sellable at the Stall.';
+    case 'dragon': return 'A single scale, warm even now. A prized sell at the Stall.';
+    default: return 'An item from your travels around Thornwake.';
+  }
+}
+function openItemModal(id){
+  const meta = RESOURCE_ITEMS[id];
+  if(!meta || invCount(id) < 1) return;
+  const n = invCount(id);
+  document.getElementById('modal-icon').innerHTML = icon(meta.icon);
+  document.getElementById('modal-name').textContent = meta.name;
+  document.getElementById('modal-qty').textContent = `${n} in your satchel`;
+  document.getElementById('modal-desc').textContent = itemFlavor(id);
+
+  const stats = document.getElementById('modal-stats');
+  const statLines = [];
+  if(meta.heal) statLines.push(`Mends ${meta.heal} HP`);
+  if(SELL_PRICES[id]) statLines.push(`Sells for ${SELL_PRICES[id]}g each &middot; ${n*SELL_PRICES[id]}g total`);
+  stats.innerHTML = statLines.join('<br>');
+  stats.style.display = statLines.length ? '' : 'none';
+
+  const actions = document.getElementById('modal-actions');
+  let actionHtml = '';
+  if(meta.heal) actionHtml += `<button class="btn btn-leaf btn-sm ch-btn" onclick="eatItem('${id}'); closeItemModal();">Eat</button>`;
+  if(SELL_PRICES[id]) actionHtml += `<button class="btn btn-gold btn-sm ch-btn" onclick="sellAll('${id}'); closeItemModal();">Sell All</button>`;
+  actions.innerHTML = actionHtml;
+
+  document.getElementById('itemmodal').classList.add('show');
+}
+function closeItemModal(){
+  document.getElementById('itemmodal').classList.remove('show');
 }
 
 /* ============================ COMBAT ============================ */
